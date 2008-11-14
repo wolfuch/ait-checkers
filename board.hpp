@@ -43,7 +43,7 @@ protected:
 private:
 		bool canJump(int directionI, int directionJ, int i, int j,int color);//sees if there is a possibility for a jump
 		bool insideBoard(int i, int j); //checks if the postion is inside the board
-		int calculateJumps(int i, int j,int sequence, int depth, int color, int type);//how many jumps can be made in a single move
+		void calculateJumps(int i, int j,int sequence, int depth, int color, int type);//how many jumps can be made in a single move
 		int forcedToMove; //if one there is at least one move were there is a jump
 		std::set<int> moves; //list of all moves
 		std::set<int> jumpMoves; //list of jumps moves
