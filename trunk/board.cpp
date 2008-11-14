@@ -95,9 +95,17 @@ bool board::canJump(int directionI, int directionJ, int i, int j, int color)
 //how many jumps can be made in a single move, 0 = white and 1 = black
 //sequence is the sequence of moves the player has to make
 //type 0=man, 1=king
-int board::calculateJumps(int i, int j, int sequence, int depth,int color, int type)
+void board::calculateJumps(int i, int j, int sequence, int depth,int color, int type)
 {
 	int start,shift;
+	
+	if(depth!=1&&sequence/pow(10,depth)==(1+!(color)*7))
+	{	
+		jumpMoves.insert(sequence);
+		return;
+	}
+		
+		
 	if(type==0&&color==0)
 	{
 		start=0;
@@ -150,6 +158,7 @@ void board::calculatePossibleMoves(int color)
 	{	
 		i=(*it) /10;
 		j=(*it) %10;
+		
 		
 		if(!forcedToMove)//checks for no jumping moves
 		{
@@ -231,10 +240,22 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 			else
 				auxiliaryCheckerList=&blackCheckers;
 			
+			
 			auxiliaryCheckerList->erase(initialPosition);
-			auxiliaryCheckerList->insert(finalPosition);
+			
+			if(finalPosition/10==(1+!(color)*7))
+			{
+				if(color==0)
+					whiteKings.insert(finalPosition);
+				else
+					blackKings.insert(finalPosition);
+				boardMatrix[finalPosition/10][finalPosition%10]=3+color;
+			}else
+			{
+				auxiliaryCheckerList->insert(finalPosition);
+				boardMatrix[finalPosition/10][finalPosition%10]=1+color;
+			}
 			boardMatrix[initialPosition/10][initialPosition%10]=0;
-			boardMatrix[finalPosition/10][finalPosition%10]=1+color;
 		}
 		else
 		{
@@ -270,9 +291,22 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 				
 				
 				auxiliaryCheckerList->erase(initialPosition);
-				auxiliaryCheckerList->insert(finalPosition);
+				
+				if(finalPosition/10==(1+!(color)*7))
+				{
+					if(color==0)
+						whiteKings.insert(finalPosition);
+					else
+						blackKings.insert(finalPosition);
+					
+					boardMatrix[finalPosition/10][finalPosition%10]=3+color;
+				}else
+				{
+					auxiliaryCheckerList->insert(finalPosition);
+					boardMatrix[finalPosition/10][finalPosition%10]=1+color;
+				}
+					
 				boardMatrix[initialPosition/10][initialPosition%10]=0;
-				boardMatrix[finalPosition/10][finalPosition%10]=1+color;
 				
 				if(boardMatrix[enemyPosition/10][enemyPosition%10]==2-color)
 				{
