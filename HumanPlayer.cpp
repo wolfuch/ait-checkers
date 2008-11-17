@@ -28,7 +28,14 @@ int HumanPlayer::getNextMove(board* b){
 	move = moveTo*100 + moveFrom;		// Combine moveFrom and moveTo
 	cout << "Move = " << move << endl;
 
-	b->movePiece(move, 1);
+	while(!b->movePiece(move, 1)){
+		cout << "Which stone do you want to move? (xy):     ";
+		cin >> moveFrom;
+		cout << "Where to you want to move you stone? (xy): ";
+		cin >> moveTo;
+		move = moveTo*100 + moveFrom;		// Combine moveFrom and moveTo
+		cout << "Move = " << move << endl;
+	}
 
 	return move;
 }
