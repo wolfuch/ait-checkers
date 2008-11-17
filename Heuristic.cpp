@@ -18,6 +18,6 @@ Heuristic::~Heuristic() {
 	// TODO Auto-generated destructor stub
 }
 
-int Heuristic::analyse(/* board */){
+int Heuristic::bestMove(board* b){
 	return 1122;
 }

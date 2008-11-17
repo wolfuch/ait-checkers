@@ -9,6 +9,7 @@
 
 #ifndef PLAYER_H_
 #define PLAYER_H_
+#include "board.hpp"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class Player {
 public:
 	Player();
 	~Player();
-	virtual int getNextMove(/* Board* board */)=0;
+	virtual int getNextMove(board* board)=0;
 };
 
 #endif /* PLAYER_H_ */

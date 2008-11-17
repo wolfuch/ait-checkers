@@ -17,7 +17,7 @@ HumanPlayer::~HumanPlayer() {
 	// Nothing yet to do here
 }
 
-int HumanPlayer::getNextMove(/* Board* board */){
+int HumanPlayer::getNextMove(board* b){
 	unsigned int moveFrom = 0;
 	unsigned int moveTo = 0;
 	unsigned int move = 0;
@@ -25,6 +25,10 @@ int HumanPlayer::getNextMove(/* Board* board */){
 	cin >> moveFrom;
 	cout << "Where to you want to move you stone? (xy): ";
 	cin >> moveTo;
-	move = moveFrom * 100 + moveTo;		// Combine moveFrom and moveTo
+	move = moveTo*100 + moveFrom;		// Combine moveFrom and moveTo
+	cout << "Move = " << move << endl;
+
+	b->movePiece(move, 1);
+
 	return move;
 }
