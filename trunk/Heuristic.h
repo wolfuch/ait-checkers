@@ -9,6 +9,7 @@
 
 #ifndef HEURISTIC_H_
 #define HEURISTIC_H_
+#include "board.hpp"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class Heuristic {
 public:
 	Heuristic();
 	~Heuristic();
-	int analyse(/* board */);
+	int bestMove(board* b);
 };
 
 #endif /* HEURISTIC_H_ */

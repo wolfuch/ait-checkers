@@ -18,7 +18,7 @@ AIPlayer::~AIPlayer() {
 	// TODO Auto-generated destructor stub
 }
 
-int AIPlayer::getNextMove(/* Board* board */){
+int AIPlayer::getNextMove(board* b){
 	Heuristic* h = new Heuristic();
-	return h->analyse(/* board */);
+	return h->bestMove(b);
 }
