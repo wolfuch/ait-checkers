@@ -17,7 +17,7 @@ class Player {
 public:
 	Player();
 	~Player();
-	virtual int getNextMove(board* board)=0;
+	virtual unsigned long getNextMove(board* board)=0;
 };
 
 #endif /* PLAYER_H_ */
