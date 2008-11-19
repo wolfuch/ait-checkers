@@ -21,5 +21,7 @@ AIPlayer::~AIPlayer() {
 
 unsigned int AIPlayer::getNextMove(board* b){
 	Heuristic* h = new Heuristic();
-	return h->bestMove(b);
+	b->calculatePossibleMoves(m_color);					// Moves have to be calculated before moving
+	b->movePiece(h->bestMove(b, m_color), m_color);		// TRY
+	return 1;
 }

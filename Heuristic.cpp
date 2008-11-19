@@ -18,6 +18,13 @@ Heuristic::~Heuristic() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned int Heuristic::bestMove(board* b){
-	return 1122;
+unsigned int Heuristic::bestMove(board* b, int color){
+	set<int> possibleMoves;
+	set<int>::iterator iter;
+	b->calculatePossibleMoves(color);
+	possibleMoves = b->getPossibleMoves(color);
+
+	iter=possibleMoves.begin();
+	cout << " ********* " << (*iter) << " **********" << endl;
+	return *iter;
 }
