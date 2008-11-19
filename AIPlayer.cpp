@@ -19,9 +19,8 @@ AIPlayer::~AIPlayer() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned int AIPlayer::getNextMove(board* b){
+void AIPlayer::makeNextMove(board* b){
 	Heuristic* h = new Heuristic();
 	b->calculatePossibleMoves(m_color);					// Moves have to be calculated before moving
 	b->movePiece(h->bestMove(b, m_color), m_color);		// TRY
-	return 1;
 }

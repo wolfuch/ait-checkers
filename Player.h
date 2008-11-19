@@ -20,7 +20,7 @@ protected:
 public:
 	Player();
 	~Player();
-	virtual unsigned int getNextMove(board* board)=0;
+	virtual void makeNextMove(board* board)=0;
 };
 
 #endif /* PLAYER_H_ */
