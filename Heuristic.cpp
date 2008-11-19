@@ -18,6 +18,6 @@ Heuristic::~Heuristic() {
 	// TODO Auto-generated destructor stub
 }
 
-long Heuristic::bestMove(board* b){
+unsigned int Heuristic::bestMove(board* b){
 	return 1122;
 }

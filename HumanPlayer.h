@@ -11,14 +11,15 @@
 #define HUMANPLAYER_H_
 #include "Player.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 class HumanPlayer: public Player {
 public:
-	HumanPlayer();
+	HumanPlayer(int color, string name);
 	~HumanPlayer();
-	unsigned long getNextMove(board* b);
+	unsigned int getNextMove(board* b);
 };
 
 #endif /* HUMANPLAYER_H_ */

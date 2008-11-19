@@ -14,10 +14,13 @@
 using namespace std;
 
 class Player {
+protected:
+	int m_color;
+	string m_name;
 public:
 	Player();
 	~Player();
-	virtual unsigned long getNextMove(board* board)=0;
+	virtual unsigned int getNextMove(board* board)=0;
 };
 
 #endif /* PLAYER_H_ */
