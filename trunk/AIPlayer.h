@@ -16,9 +16,9 @@ using namespace std;
 
 class AIPlayer: public Player {
 public:
-	AIPlayer();
+	AIPlayer(int color, string name);
 	~AIPlayer();
-	unsigned long getNextMove(board* b);
+	unsigned int getNextMove(board* b);
 };
 
 #endif /* AIPLAYER_H_ */

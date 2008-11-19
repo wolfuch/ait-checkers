@@ -9,8 +9,9 @@
 
 #include "AIPlayer.h"
 
-AIPlayer::AIPlayer() {
-	// TODO Auto-generated constructor stub
+AIPlayer::AIPlayer(int color, string name) {
+	m_color = color;
+	m_name = name;
 
 }
 
@@ -18,7 +19,7 @@ AIPlayer::~AIPlayer() {
 	// TODO Auto-generated destructor stub
 }
 
-unsigned long AIPlayer::getNextMove(board* b){
+unsigned int AIPlayer::getNextMove(board* b){
 	Heuristic* h = new Heuristic();
 	return h->bestMove(b);
 }
