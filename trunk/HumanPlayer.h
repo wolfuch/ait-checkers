@@ -19,7 +19,7 @@ class HumanPlayer: public Player {
 public:
 	HumanPlayer(int color, string name);
 	~HumanPlayer();
-	unsigned int getNextMove(board* b);
+	void makeNextMove(board* b);
 };
 
 #endif /* HUMANPLAYER_H_ */

@@ -18,7 +18,7 @@ class AIPlayer: public Player {
 public:
 	AIPlayer(int color, string name);
 	~AIPlayer();
-	unsigned int getNextMove(board* b);
+	void makeNextMove(board* b);
 };
 
 #endif /* AIPLAYER_H_ */
