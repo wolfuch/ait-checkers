@@ -18,7 +18,7 @@ class AIPlayer: public Player {
 public:
 	AIPlayer();
 	~AIPlayer();
-	int getNextMove(board* b);
+	unsigned long getNextMove(board* b);
 };
 
 #endif /* AIPLAYER_H_ */

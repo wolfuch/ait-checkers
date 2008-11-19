@@ -17,7 +17,7 @@ class Heuristic {
 public:
 	Heuristic();
 	~Heuristic();
-	int bestMove(board* b);
+	long bestMove(board* b);
 };
 
 #endif /* HEURISTIC_H_ */

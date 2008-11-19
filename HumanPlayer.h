@@ -18,7 +18,7 @@ class HumanPlayer: public Player {
 public:
 	HumanPlayer();
 	~HumanPlayer();
-	int getNextMove(board* b);
+	unsigned long getNextMove(board* b);
 };
 
 #endif /* HUMANPLAYER_H_ */
