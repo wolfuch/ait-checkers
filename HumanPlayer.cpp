@@ -22,7 +22,7 @@ HumanPlayer::~HumanPlayer() {
  * Method which reads the next move from the human (over keyboard) and executed the move if possible.
  * If not, the player will be asked as long until he enters a legal move.
  */
-unsigned long HumanPlayer::getNextMove(board* b){
+unsigned int HumanPlayer::getNextMove(board* b){
 	unsigned int moveFrom = 0;	// Position from where to move
 	unsigned int moveTo = 0;	// Position to where to move
 	unsigned int move = 0;		// Move "sequence"
