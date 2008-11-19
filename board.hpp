@@ -62,8 +62,9 @@ private:
 		std::set<int> whiteKings; //all whiteKings positions
 		std::set<int> blackCheckers; //all blackCheckers positions
 		std::set<int> blackKings; //all blackKings positions
-		std::set<int> checkers[2]; //all whiteCheckers positions
-		std::set<int> kings[2]; //all whiteKings positions
+		std::set<int> checkers[2]; //all checkers positions, 0 is all the white checkers, 1 all black checkers
+		std::set<int> kings[2]; //all kings position, 0 is all the white kings, 1 all the black kings
+		std::list< std::list<int> > moveRecords; //necessary to undo moves
 };
 
 #endif // _BOARD_HPP_

@@ -222,15 +222,49 @@ void board::clean()//READY!
 	jumpMoves.clear();
 }
 
-void board::undo()
+void board::undoMove()
 {
+	std::list<int> movesMade = moveRecords.back();
+	std::list<int>::iterator myIterator;
 
+	int i,j,type;
+
+	for(myIterator=movesMade.begin();myIterator!=movesMade.end();myIterator++)
+	{
+		i=(*myIterator)/100;
+		j=((*myIterator)/10)%10;
+		type=(*myIterator)%10;
+		boardMatrix[i][j]=type;
+
+		if(type==0)
+		{
+			checkers[0].erase(i*10+j);
+			checkers[1].erase(i*10+j);
+			kings[0].erase(i*10+j);
+			kings[1].erase(i*10+j);
+		}
+
+		if(type==1)
+			checkers[0].insert(i*10+j);
+
+		if(type==2)
+			checkers[1].insert(i*10+j);
+
+		if(type==3)
+			kings[0].insert(i*10+j);
+
+		if(type==4)
+			kings[1].insert(i*10+j);
+	}
+
+	moveRecords.pop_back();
 }
 
 bool board::movePiece(int sequence, int color)//sequence is the sequence of numbers that represent the move, color=0 whiteMoves, color=1 blackMoves
 {
 	int initialPosition,finalPosition,enemyPosition;
 	std::set<int> *auxiliaryCheckerList,*auxiliaryEnemyList;
+	std::list<int> movesMade;
 
 	if(jumpMoves.empty()&&moves.count(sequence)>0)
 	{
@@ -242,6 +276,9 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 			auxiliaryCheckerList=&(checkers[color]);//this should be right, have to check it later
 
 			auxiliaryCheckerList->erase(initialPosition);
+
+			movesMade.push_back(initialPosition*10+1+color);
+			movesMade.push_back(finalPosition*10+0);
 
 			if(finalPosition/10==(1+!(color)*7))
 			{
@@ -264,9 +301,14 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 			auxiliaryCheckerList->insert(finalPosition);
 			boardMatrix[initialPosition/10][initialPosition%10]=0;
 			boardMatrix[finalPosition/10][finalPosition%10]=3+color;
+
+			movesMade.push_back(initialPosition*10+2+color);
+			movesMade.push_back(finalPosition*10+0);
 		}
 
 		clean();
+
+		moveRecords.push_back(movesMade);
 
 		return true;
 
@@ -283,6 +325,9 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 				auxiliaryCheckerList=&(checkers[color]);//this should be right, have to check it later
 
 				auxiliaryCheckerList->erase(initialPosition);
+				movesMade.push_back(initialPosition*10+1+color);
+				movesMade.push_back(finalPosition*10+0);
+				movesMade.push_back(enemyPosition*10+boardMatrix[enemyPosition/10][enemyPosition%10]);
 
 				if(finalPosition/10==(1+!(color)*7))
 				{
@@ -317,6 +362,10 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 				boardMatrix[initialPosition/10][initialPosition%10]=0;
 				boardMatrix[finalPosition/10][finalPosition%10]=3+color;
 
+				movesMade.push_back(initialPosition*10+2+color);
+				movesMade.push_back(finalPosition*10+0);
+				movesMade.push_back(enemyPosition*10+boardMatrix[enemyPosition/10][enemyPosition%10]);
+
 				if(boardMatrix[enemyPosition/10][enemyPosition%10]==2-color)
 				{
 					(checkers[!color]).erase(enemyPosition);
@@ -332,6 +381,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 			sequence=sequence/100;
 		}
 
+		moveRecords.push_back(movesMade);
 		clean();
 		return true;
 	}
