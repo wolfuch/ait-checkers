@@ -97,6 +97,25 @@ bool board::canJump(int directionI, int directionJ, int i, int j, int color) // 
 		return false;
 }
 
+/* Returns the value of the termination state of the game
+ * 0 = Not terminated
+ * 1 = Draw
+ * 2 = White won
+ * 3 = Black won
+ */
+unsigned int board::terminal(){
+   if(whiteCheckers.size()==0 && blackCheckers.size()==0 &&    // Draw
+           whiteKings.size()==1 && blackKings.size()==1){
+       return 1;
+   } else if(getPossibleMoves(1).size()==0){        // White won
+       return 2;
+   } else if(getPossibleMoves(0).size()==0){        // Black won
+       return 3;
+   } else {                                // Not terminated
+       return 0;
+   }
+}
+
 //how many jumps can be made in a single move, 0 = white and 1 = black
 //sequence is the sequence of moves the player has to make
 //type 0=man, 1=king
@@ -201,15 +220,18 @@ void board::calculatePossibleMoves(int color) //READY!
 
 		calculateJumps(i,j,(*it),1,color,1);
 	}
+
+	if(!jumpMoves.empty())
+	{
+		moves = jumpMoves;
+	}
 }
 
 std::set<unsigned int> board::getPossibleMoves(int color)// READY
 {
-	calculatePossibleMoves(color);
-
-	if(!jumpMoves.empty())
+	if(moves.empty())
 	{
-		return jumpMoves;
+		calculatePossibleMoves(color);
 	}
 
 	return moves;
