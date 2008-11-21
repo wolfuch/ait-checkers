@@ -409,7 +409,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 	}
 	else
 	{
-		std::cout<<"You are not allowed to make that move!!"<<std::endl;
+		std::cout<<"You are not allowed to make that move!!\nSequence is:"<<sequence<<"\nColor is:"<<color<<std::endl;
 		return false;
 	}
 }
