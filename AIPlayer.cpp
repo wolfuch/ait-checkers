@@ -20,7 +20,9 @@ AIPlayer::~AIPlayer() {
 }
 
 void AIPlayer::makeNextMove(board* b){
+	//int move;
 	Heuristic* h = new Heuristic();
 	b->calculatePossibleMoves(m_color);					// Moves have to be calculated before moving
+	//move 
 	b->movePiece(h->bestMove(b, m_color), m_color);		// TRY
 }

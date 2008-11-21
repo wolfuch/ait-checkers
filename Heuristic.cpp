@@ -27,7 +27,7 @@ unsigned int Heuristic::bestMove(board* b, int color) {
 
 	minMax(0, MINUS_INFINITY, PLUS_INFINITY);
 	std::cout<<iteration;
-	std::cerr<<actualMove;
+	std::cout<<actualMove;
 	return actualMove;
 }
 
@@ -36,11 +36,10 @@ int Heuristic::evaluation() {
 	int sumBlack = 0;
 	int x,y;
 	std::set<int>::iterator setIterator;
-	std::set<int> set;
-	
+
 	
 	// white pieces
-	for(setIterator = set.begin(); setIterator != set.end(); ++setIterator)
+	for(setIterator = (b->getWhiteCheckers()).begin(); setIterator != (b->getWhiteCheckers()).end(); ++setIterator)
 	{
 		y = *setIterator / 10;
 		// x = *setIterator % 10;    // maybe used in future
@@ -48,7 +47,7 @@ int Heuristic::evaluation() {
 	}
 	
 	// white kings
-	for(setIterator = set.begin(); setIterator != set.end(); ++setIterator)
+	for(setIterator = (b->getWhiteKings()).begin(); setIterator != (b->getWhiteKings()).end(); ++setIterator)
 	{
 		y = *setIterator / 10;
 		x = *setIterator % 10;
@@ -64,7 +63,7 @@ int Heuristic::evaluation() {
 	}
 	
 	// black pieces
-	for(setIterator = set.begin(); setIterator != set.end(); ++setIterator)
+	for(setIterator = (b->getBlackCheckers()).begin(); setIterator != (b->getBlackCheckers()).end(); ++setIterator)
 	{
 		y = 9 - (*setIterator / 10);
 		// x = *setIterator % 10;    // maybe used in future
@@ -72,7 +71,7 @@ int Heuristic::evaluation() {
 	}
 
 	// black kings
-	for(setIterator = set.begin(); setIterator != set.end(); ++setIterator)
+	for(setIterator = (b->getBlackKings()).begin(); setIterator != (b->getBlackKings()).end(); ++setIterator)
 	{
 		y = 9 - (*setIterator / 10);
 		x = *setIterator % 10;
@@ -100,6 +99,7 @@ int Heuristic::evaluation() {
 int Heuristic::minMax(int level, int alpha, int beta) {
         int tmp = 0;    // temporary value which is compared to max value
         int winCheck=0;  
+        set<unsigned int> tempMoveSet;
         set<unsigned int>::iterator iter, iterEnd;      
         
         iteration++;
@@ -122,8 +122,9 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         }
         
         // getting possible moves  
-		iter = (b->getPossibleMoves(color)).begin();
-		iterEnd = (b->getPossibleMoves(color)).end();
+        tempMoveSet = b->getPossibleMoves(color);
+		iter = tempMoveSet.begin();
+		iterEnd = tempMoveSet.end();
         
         // MAX       
         if (level % 2 == 0) {
