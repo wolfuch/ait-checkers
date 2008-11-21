@@ -29,7 +29,7 @@ public:
 	~Heuristic();
 	unsigned int bestMove(board* b, int color);
 private:
-	int actualMove;
+	unsigned int actualMove;
 	int evaluation();
 	int minMax(int level, int alpha, int beta);	
 	board* b;

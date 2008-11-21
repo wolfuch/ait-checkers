@@ -19,16 +19,16 @@ Heuristic::~Heuristic() {
 }
 
 
-unsigned int Heuristic::bestMove(board* b, int color){
-	int move;
+unsigned int Heuristic::bestMove(board* b, int color) {
 	this->b = b;
 	this->color = color;
-	maxLevel = 7;
+	maxLevel = 1;
 	iteration = 0;
 
-	move = minMax(0, MINUS_INFINITY, PLUS_INFINITY);
+	minMax(0, MINUS_INFINITY, PLUS_INFINITY);
 	std::cout<<iteration;
-	return move;
+	std::cerr<<actualMove;
+	return actualMove;
 }
 
 int Heuristic::evaluation() {
@@ -103,6 +103,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         set<unsigned int>::iterator iter, iterEnd;      
         
         iteration++;
+        std::cout<<"iteration "<<iteration;
         
         b->calculatePossibleMoves(color);
         winCheck = b->terminal();
@@ -116,6 +117,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         
         // Leaf
         if (level == maxLevel) {
+        	std::cout<<" evaluation: "<<evaluation();
         	return evaluation();
         }
         
@@ -146,7 +148,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
             for (; iter != iterEnd; ++iter) {
         	    if (alpha >= beta)      // while (alpha < beta)
                 	break;
-                b->movePiece(*iter, color);
+                b->movePiece(*iter, !color);
                 tmp = minMax(level+1, alpha, beta);
                 b->undoMove();
                 if (tmp < beta) {
