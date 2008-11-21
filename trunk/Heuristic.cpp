@@ -47,19 +47,21 @@ int Heuristic::evaluation() {
 	}
 	
 	// white kings
-	for(setIterator = (b->getWhiteKings()).begin(); setIterator != (b->getWhiteKings()).end(); ++setIterator)
-	{
-		y = *setIterator / 10;
-		x = *setIterator % 10;
-		sumWhite += KING_VALUE + y*y;
-		if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
-			if (x == y)	{	// king in one of corners (11, 88)
-				sumWhite -= CORNER_PENALTY;	
-			}
-			else {
-				sumWhite -= EDGE_PENALTY;
-			}
-		}	
+	if (!(b->getWhiteKings()).empty()) {
+		for(setIterator = (b->getWhiteKings()).begin(); setIterator != (b->getWhiteKings()).end(); ++setIterator)
+		{
+			y = *setIterator / 10;
+			x = *setIterator % 10;
+			sumWhite += KING_VALUE + y*y;
+			if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
+				if (x == y)	{	// king in one of corners (11, 88)
+					sumWhite -= CORNER_PENALTY;	
+				}
+				else {
+					sumWhite -= EDGE_PENALTY;
+				}
+			}	
+		}
 	}
 	
 	// black pieces
@@ -71,17 +73,19 @@ int Heuristic::evaluation() {
 	}
 
 	// black kings
-	for(setIterator = (b->getBlackKings()).begin(); setIterator != (b->getBlackKings()).end(); ++setIterator)
-	{
-		y = 9 - (*setIterator / 10);
-		x = *setIterator % 10;
-		sumBlack += KING_VALUE + y*y;
-		if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
-			if (x == y)	{	// king in one of corners (11, 88)
-				sumBlack -= CORNER_PENALTY;	
-			}
-			else {
-				sumBlack -= EDGE_PENALTY;
+	if (!(b->getBlackKings()).empty()) {
+		for(setIterator = (b->getBlackKings()).begin(); setIterator != (b->getBlackKings()).end(); ++setIterator)
+		{
+			y = 9 - (*setIterator / 10);
+			x = *setIterator % 10;
+			sumBlack += KING_VALUE + y*y;
+			if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
+				if (x == y)	{	// king in one of corners (11, 88)
+					sumBlack -= CORNER_PENALTY;	
+				}
+				else {
+					sumBlack -= EDGE_PENALTY;
+				}
 			}
 		}
 	}
@@ -101,7 +105,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         int winCheck=0;  
         set<unsigned int> tempMoveSet;
         set<unsigned int>::iterator iter, iterEnd;      
-        
+       
         iteration++;
         std::cout<<"iteration "<<iteration;
         
@@ -121,13 +125,13 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         	return evaluation();
         }
         
-        // getting possible moves  
-        tempMoveSet = b->getPossibleMoves(color);
-		iter = tempMoveSet.begin();
-		iterEnd = tempMoveSet.end();
-        
+     
         // MAX       
         if (level % 2 == 0) {
+	       // getting possible moves  
+	        tempMoveSet = b->getPossibleMoves(color);
+			iter = tempMoveSet.begin();
+			iterEnd = tempMoveSet.end();
             for (; iter != iterEnd; ++iter) {
         	    if (alpha >= beta)      // while (alpha < beta)
                 	break;
@@ -146,6 +150,10 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 
         // MIN       
        else {
+	        // getting possible moves  
+	        tempMoveSet = b->getPossibleMoves(!color);
+			iter = tempMoveSet.begin();
+			iterEnd = tempMoveSet.end();       	
             for (; iter != iterEnd; ++iter) {
         	    if (alpha >= beta)      // while (alpha < beta)
                 	break;
