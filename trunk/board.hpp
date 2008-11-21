@@ -46,6 +46,12 @@ public:
 		int** getBoard();//returns the board in the form of an array
 		bool movePiece(int sequence,int color);//moves a checker (not implemented, YET)
 		void undoMove();//undo the last move, erasing the current state;
+		std::set<int> getWhiteCheckers(){return checkers[0];};
+		std::set<int> getBlackCheckers(){return checkers[1];};
+		std::set<int> getWhiteKings(){return kings[0];};
+		std::set<int> getBlackKings(){return kings[1];};
+		unsigned int terminal();
+		void clean();
 
 protected:
 
@@ -53,7 +59,6 @@ private:
 		bool canJump(int directionI, int directionJ, int i, int j,int color);//sees if there is a possibility for a jump
 		bool insideBoard(int i, int j); //checks if the postion is inside the board
 		void calculateJumps(int i, int j,int sequence, int depth, int color, int type);//how many jumps can be made in a single move
-		void clean();
 		int forcedToMove; //if one there is at least one move were there is a jump
 		std::set<unsigned int> moves; //list of all moves
 		std::set<unsigned int> jumpMoves; //list of jumps moves
