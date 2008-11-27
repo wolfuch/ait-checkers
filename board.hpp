@@ -39,6 +39,7 @@ class board
 {
 public:
 		board();// board constructor
+		~board(){delete [] boardMatrix;}
 		const board &operator=( const board & rhs); //not implemented
 		void printBoard(); //prints the board to screen
 		std::set <unsigned int> getPossibleMoves(int color); //get the possible moves, if input is 0 all possible white moves, if input is 1 all possible black moves

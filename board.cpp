@@ -68,6 +68,8 @@ void board::printBoard()// READY!
 			std::cout<<boardMatrix[i][j]<<" ";
 		std::cout<<std::endl;
 	}
+
+	std::cout<<"\n\n\n";
 }
 
 //returns the board
@@ -104,16 +106,16 @@ bool board::canJump(int directionI, int directionJ, int i, int j, int color) // 
  * 3 = Black won
  */
 unsigned int board::terminal(){
-   if(whiteCheckers.size()==0 && blackCheckers.size()==0 &&    // Draw
+   /*if(whiteCheckers.size()==0 && blackCheckers.size()==0 &&    // Draw
            whiteKings.size()==1 && blackKings.size()==1){
        return 1;
    } else if(getPossibleMoves(1).size()==0){        // White won
        return 2;
    } else if(getPossibleMoves(0).size()==0){        // Black won
        return 3;
-   } else {                                // Not terminated
+   } else {  */                              // Not terminated
        return 0;
-   }
+   //}
 }
 
 //how many jumps can be made in a single move, 0 = white and 1 = black
@@ -410,6 +412,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 	else
 	{
 		std::cout<<"You are not allowed to make that move!!\nSequence is:"<<sequence<<"\nColor is:"<<color<<std::endl;
+
 		return false;
 	}
 }
