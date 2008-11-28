@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 	board* brd = new board();
 
 	/* Create players */
-	Player* whitePlayer = new AIPlayer(0, "Marc");
+	Player* whitePlayer = new HumanPlayer(0, "Marc");
 	Player* blackPlayer = new AIPlayer(1, "Abraham");
 
 	//brd->cal

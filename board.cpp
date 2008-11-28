@@ -422,12 +422,19 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
  * =========================================================== */
 
 void board::printBoardAlternative(){
+	std::cout << "  ---------------------------------" << std::endl;
 	for(int i=8;i>0;i--) {
-		std::cout << i << "  ";
-		for(int j=1;j<9;j++)
-			std::cout<<boardMatrix[i][j]<<" ";
-		std::cout<<std::endl;
+		std::cout << i << " | ";
+		for(int j=1;j<9;j++){
+			if(boardMatrix[i][j]!=0){
+			std::cout<<boardMatrix[i][j]<<" | ";
+			} else {
+				std::cout<< " " <<" | ";
+			}
+		}
+		std::cout << std::endl << "  ---------------------------------" << std::endl;
+	//	std::cout<<std::endl;
 	}
-	std::cout << std::endl << "   1 2 3 4 5 6 7 8" << std::endl;
+	std::cout << "    1   2   3   4   5   6   7   8" << std::endl;
 	std::cout<<"\n\n\n";
 }
