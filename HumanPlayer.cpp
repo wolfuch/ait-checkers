@@ -23,19 +23,14 @@ HumanPlayer::~HumanPlayer() {
  * If not, the player will be asked as long until he enters a legal move.
  */
 void HumanPlayer::makeNextMove(board* b){
-	unsigned int moveFrom = 0;	// Position from where to move
-	unsigned int moveTo = 0;	// Position to where to move
 	unsigned int move = 0;		// Move "sequence"
 	bool moved = false;			// If the tried move has been made (was legal) or not.
 
 	/* Ask move until it is a legal one */
 	while(!moved){
 		cout << "Player '" << m_name << "':" << endl;
-		cout << "Which stone do you want to move? (YX):     ";
-		cin >> moveFrom;
-		cout << "Where to you want to move you stone? (YX): ";
-		cin >> moveTo;
-		move = moveTo*100 + moveFrom;			// Combine moveFrom and moveTo
+		cout << "What will be your move?:  ";
+		cin >> move;		// Combine moveFrom and moveTo
 		cout << "Move = " << move << endl;
 		b->calculatePossibleMoves(m_color);		// Moves have to be calculated before moving
 		moved = b->movePiece(move, m_color);	// TRY
