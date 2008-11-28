@@ -416,3 +416,18 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 		return false;
 	}
 }
+
+/* ===========================================================
+ * Just an alternative methode to display the board (marc)
+ * =========================================================== */
+
+void board::printBoardAlternative(){
+	for(int i=8;i>0;i--) {
+		std::cout << i << "  ";
+		for(int j=1;j<9;j++)
+			std::cout<<boardMatrix[i][j]<<" ";
+		std::cout<<std::endl;
+	}
+	std::cout << std::endl << "   1 2 3 4 5 6 7 8" << std::endl;
+	std::cout<<"\n\n\n";
+}
