@@ -22,7 +22,7 @@ Heuristic::~Heuristic() {
 unsigned int Heuristic::bestMove(board* b, int color) {
 	this->b = b;
 	this->color = color;
-	maxLevel = 1;
+	maxLevel = 2;
 	iteration = 0;
 
 	minMax(0, MINUS_INFINITY, PLUS_INFINITY);
@@ -104,6 +104,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 
         iteration++;
        // std::cout<<"iteration "<<iteration;
+        std::cout<<std::endl<<"level: "<<level<<" ";
 
         winCheck = b->terminal();
         if (winCheck == color+2)     // computer wins
