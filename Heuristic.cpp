@@ -20,12 +20,16 @@ Heuristic::~Heuristic() {
 
 
 unsigned int Heuristic::bestMove(board* b, int color) {
+	int iterativeMaxLevel = 3;		// max level for iterative deepening search
 	this->b = b;
 	this->color = color;
 	maxLevel = 2;
 	iteration = 0;
 
-	minMax(0, MINUS_INFINITY, PLUS_INFINITY);
+
+	//for (maxLevel=0; maxLevel <= iterativeMaxLevel; ++maxLevel) {
+		minMax(0, MINUS_INFINITY, PLUS_INFINITY);
+	//}
 	return actualMove;
 }
 
@@ -99,7 +103,7 @@ int Heuristic::evaluation() {
 int Heuristic::minMax(int level, int alpha, int beta) {
         int tmp = 0;    // temporary value which is compared to max value
         int winCheck=0;
-        set<unsigned int> tempMoveSet;
+        set<unsigned int> tempMoveSet,tempMoveSet2;
         set<unsigned int>::iterator iter, iterEnd;
 
         iteration++;
@@ -134,8 +138,14 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         	    if (alpha >= beta)      // while (alpha < beta)
                 	break;
                 b->movePiece(*iter, color);
+                b->printBoardAlternative();
+                tempMoveSet2 = b->getPossibleMoves(color);
+                b->printSet(tempMoveSet);
                 tmp = minMax(level+1, alpha, beta);
                 b->undoMove();
+                b->printBoardAlternative();
+                tempMoveSet2 = b->getPossibleMoves(color);
+                b->printSet(tempMoveSet);
                 b->calculatePossibleMoves(color);
                 if (tmp > alpha) {
         	        alpha = tmp;
@@ -160,8 +170,14 @@ int Heuristic::minMax(int level, int alpha, int beta) {
         	    if (alpha >= beta)      // while (alpha < beta)
                 	break;
                 b->movePiece(*iter, !color);
+                b->printBoardAlternative();
+                b->printSet(b->getPossibleMoves(!color));
+                b->printSet(tempMoveSet);
                 tmp = minMax(level+1, alpha, beta);
                 b->undoMove();
+                b->printBoardAlternative();
+                b->printSet(b->getPossibleMoves(!color));
+                b->printSet(tempMoveSet);
                 b->calculatePossibleMoves(!color);
                 if (tmp < beta) {
         	        beta = tmp;

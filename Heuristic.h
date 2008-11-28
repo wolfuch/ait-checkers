@@ -29,9 +29,10 @@ public:
 	~Heuristic();
 	unsigned int bestMove(board* b, int color);
 private:
+	std::set<unsigned int> bestMoveHistory;
 	unsigned int actualMove;
 	int evaluation();
-	int minMax(int level, int alpha, int beta);	
+	int minMax(int level, int alpha, int beta);
 	board* b;
 	int color;		// 0 - white, 1 - black
 	int maxLevel;
