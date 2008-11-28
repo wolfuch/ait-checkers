@@ -236,6 +236,8 @@ std::set<unsigned int> board::getPossibleMoves(int color)// READY
 		calculatePossibleMoves(color);
 	}
 
+	printSet(moves);
+
 	return moves;
 }
 
@@ -438,3 +440,14 @@ void board::printBoardAlternative(){
 	std::cout << "    1   2   3   4   5   6   7   8" << std::endl;
 	std::cout<<"\n\n\n";
 }
+
+void board::printSet(std::set<unsigned int> &set) {
+	std::set<unsigned int>::iterator iter = set.begin();
+	for(; iter != set.end(); ++iter) {
+		std::cout<<*iter<<" ";
+	}
+	//std::cout<<std::endl;
+}
+
+
+

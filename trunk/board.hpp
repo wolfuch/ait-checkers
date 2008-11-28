@@ -54,6 +54,7 @@ public:
 		std::set<int> getBlackKings(){return kings[1];};
 		unsigned int terminal();
 		void clean();
+		void printSet(std::set<unsigned int> &set);
 
 protected:
 
