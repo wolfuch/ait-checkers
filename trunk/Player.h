@@ -13,14 +13,15 @@
 
 using namespace std;
 
+/* Abstract class for the player */
 class Player {
 protected:
-	int m_color;
-	string m_name;
+	int m_color;			// Player color
+	string m_name;			// Player name
 public:
-	Player();
-	~Player();
-	virtual void makeNextMove(board* board)=0;
+	Player();				// Constructor
+	~Player();				// Destructor
+	virtual void makeNextMove(board* board)=0;	//Interface for the next move
 };
 
 #endif /* PLAYER_H_ */

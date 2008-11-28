@@ -17,9 +17,9 @@ using namespace std;
 
 class HumanPlayer: public Player {
 public:
-	HumanPlayer(int color, string name);
-	~HumanPlayer();
-	void makeNextMove(board* b);
+	HumanPlayer(int color, string name);		// Creates user
+	~HumanPlayer();								// Destroys user
+	void makeNextMove(board* b);				// Requests the move from the user
 };
 
 #endif /* HUMANPLAYER_H_ */

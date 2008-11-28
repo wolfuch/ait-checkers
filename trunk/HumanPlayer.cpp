@@ -35,9 +35,9 @@ void HumanPlayer::makeNextMove(board* b){
 		cin >> moveFrom;
 		cout << "Where to you want to move you stone? (YX): ";
 		cin >> moveTo;
-		move = moveTo*100 + moveFrom;		// Combine moveFrom and moveTo
+		move = moveTo*100 + moveFrom;			// Combine moveFrom and moveTo
 		cout << "Move = " << move << endl;
 		b->calculatePossibleMoves(m_color);		// Moves have to be calculated before moving
-		moved = b->movePiece(move, m_color);		// TRY
+		moved = b->movePiece(move, m_color);	// TRY
 	}
 }
