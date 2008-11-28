@@ -31,9 +31,9 @@ void HumanPlayer::makeNextMove(board* b){
 	/* Ask move until it is a legal one */
 	while(!moved){
 		cout << "Player '" << m_name << "':" << endl;
-		cout << "Which stone do you want to move? (xy):     ";
+		cout << "Which stone do you want to move? (YX):     ";
 		cin >> moveFrom;
-		cout << "Where to you want to move you stone? (xy): ";
+		cout << "Where to you want to move you stone? (YX): ";
 		cin >> moveTo;
 		move = moveTo*100 + moveFrom;		// Combine moveFrom and moveTo
 		cout << "Move = " << move << endl;
