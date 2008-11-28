@@ -20,17 +20,17 @@ int main(int argc, char **argv) {
 	board* brd = new board();
 
 	/* Create players */
-	Player* whitePlayer = new HumanPlayer(0, "Marc");
+	Player* whitePlayer = new AIPlayer(0, "Marc");
 	Player* blackPlayer = new AIPlayer(1, "Abraham");
 
 	//brd->cal
 	do {
 		// White player
-		brd->printBoard();
+		brd->printBoardAlternative();
 		whitePlayer->makeNextMove(brd);
 
 		// Black player
-		brd->printBoard();
+		brd->printBoardAlternative();
 		blackPlayer->makeNextMove(brd);
 	} while (true);
 	return 0;
