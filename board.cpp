@@ -154,7 +154,7 @@ void board::calculateJumps(int i, int j, int sequence, int depth,int color, int 
 
 		if(canJump(directionI,directionJ,i,j,color))//if there is a jumping move
 		{
-			calculateJumps(i+2*directionI,j+2*directionJ,sequence+(j+2*directionJ)*(pow(10,depth+1))+(i+2*directionI)*(pow(10,depth+2)),depth+1, color,type ); //recursively check if we can extend the move
+			calculateJumps(i+2*directionI,j+2*directionJ,sequence+(j+2*directionJ)*(pow(10,depth+2))+(i+2*directionI)*(pow(10,depth+3)),depth+1, color,type ); //recursively check if we can extend the move
 		}
 		else if(depth!=1)
 		{
@@ -231,12 +231,13 @@ void board::calculatePossibleMoves(int color) //READY!
 
 std::set<unsigned int> board::getPossibleMoves(int color)// READY
 {
-	if(moves.empty())
-	{
+	//if(moves.empty())
+	//{
+		clean();
 		calculatePossibleMoves(color);
-	}
+	//}
 
-	printSet(moves);
+	//printSet(moves);
 
 	return moves;
 }
@@ -478,7 +479,7 @@ void board::printSet(std::set<unsigned int> &set) {
 	for(; iter != set.end(); ++iter) {
 		std::cout<<*iter<<" ";
 	}
-	//std::cout<<std::endl;
+	std::cout<<std::endl;
 }
 
 
