@@ -23,7 +23,7 @@ unsigned int Heuristic::bestMove(board* b, int color) {
 	int iterativeMaxLevel = 3;		// max level for iterative deepening search
 	this->b = b;
 	this->color = color;
-	maxLevel = 2;
+	maxLevel = 10;
 	iteration = 0;
 
 
@@ -108,7 +108,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 
 	iteration++;
 	// std::cout<<"iteration "<<iteration;
-	std::cout<<std::endl<<"level: "<<level<<" ";
+	//std::cout<<std::endl<<"level: "<<level<<" ";
 
 	winCheck = b->terminal();
 	if (winCheck == color+2)     // computer wins
@@ -138,14 +138,14 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, color);
-			b->printBoardAlternative();
+			//b->printBoardAlternative();
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			b->printBoardAlternative();
-			tempMoveSet2 = b->getPossibleMoves(color);
+			//b->printBoardAlternative();
+			//tempMoveSet2 = b->getPossibleMoves(color);
 			b->clean();
-			std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
-			std::cout<<"*old calculated : ";b->printSet(tempMoveSet);
+			//std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
+			//std::cout<<"*old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(color);
 			if (tmp > alpha) {
 				alpha = tmp;
@@ -170,14 +170,14 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, !color);
-			b->printBoardAlternative();
+			//b->printBoardAlternative();
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			b->printBoardAlternative();
-			tempMoveSet2 = b->getPossibleMoves(!color);
+			//b->printBoardAlternative();
+			//tempMoveSet2 = b->getPossibleMoves(!color);
 			b->clean();
-			std::cout<<"recently calculated : ";b->printSet(tempMoveSet2);
-			std::cout<<"old calculated : ";b->printSet(tempMoveSet);
+			//std::cout<<"recently calculated : ";b->printSet(tempMoveSet2);
+			//std::cout<<"old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(!color);
 			if (tmp < beta) {
 				beta = tmp;
