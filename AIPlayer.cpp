@@ -13,16 +13,15 @@
 AIPlayer::AIPlayer(int color, string name) {
 	m_color = color;
 	m_name = name;
-
+	m_heuristic = new Heuristic();
 }
 
 AIPlayer::~AIPlayer() {
-	// TODO Auto-generated destructor stub
+	delete m_heuristic;
 }
 
 /* Requests the best move from the Heuristic and makes the move */
 void AIPlayer::makeNextMove(board* b){
-	Heuristic* h = new Heuristic();
 	b->calculatePossibleMoves(m_color);					// Moves have to be calculated before moving
-	b->movePiece(h->bestMove(b, m_color), m_color);		// TRY
+	b->movePiece(m_heuristic->bestMove(b, m_color), m_color);		// TRY
 }
