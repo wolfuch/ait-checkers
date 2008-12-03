@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	//std::cout<<(1+!(color)*7)<<std::endl;
 
 	/* Create players */
-	Player* whitePlayer = new AIPlayer(0, "Marc", mutex);
+	Player* whitePlayer = new HumanPlayer(0, "Marc");
 	Player* blackPlayer = new AIPlayer(1, "Abraham", mutex);
 
 	//timer->start(NULL);		// starts new thread for time counting
