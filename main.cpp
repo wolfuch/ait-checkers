@@ -11,6 +11,7 @@
 #include "board.hpp"
 #include "HumanPlayer.h"
 #include "AIPlayer.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -18,21 +19,27 @@ int main(int argc, char **argv) {
 	std::set<int>::iterator iter;
 	std::set <int> list;
 	board* brd = new board();
+	Timer* timer = new Timer();
 
 	/* Create players */
 	Player* whitePlayer = new HumanPlayer(0, "Marc");
 	Player* blackPlayer = new AIPlayer(1, "Abraham");
 
+	timer->start(NULL);		// starts new thread for time counting
 	//brd->cal
 	do {
-		// White player
-		brd->printBoardAlternative();
-		whitePlayer->makeNextMove(brd);
-
-		// Black player
-		brd->printBoardAlternative();
-		blackPlayer->makeNextMove(brd);
+		//sleep(1);
+//		// White player
+//		brd->printBoardAlternative();
+//		whitePlayer->makeNextMove(brd);
+//
+//		// Black player
+//		brd->printBoardAlternative();
+//		blackPlayer->makeNextMove(brd);
 	} while (true);
+
+	timer->wait();
+	timer->stop();
 	return 0;
 }
 
