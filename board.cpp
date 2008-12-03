@@ -35,7 +35,7 @@ board::board() //READY!
 
 	for(int i=1;i<4;i++)//We put the white checkers on the board
 	{
-		for(int j=i%2;j<9;j+=2)
+		for(int j=(i+1)%2+1;j<9;j+=2)
 		{
 			boardMatrix[i][j]=WHITEMAN;
 			whiteCheckers.insert(i*10+j); //we add the checkers to the list
@@ -45,12 +45,22 @@ board::board() //READY!
 	for(int i=6;i<9;i++)//We put the black checkers on the board
 	{
 
-		for(int j=i%2;j<9;j+=2)
+		for(int j=(i+1)%2+1;j<9;j+=2)
 		{
 			boardMatrix[i][j]=BLACKMAN;
 			blackCheckers.insert(i*10+j);//we add the checkers to the blackCheckers list
 		}
 	}
+
+	/*boardMatrix[7][5]=WHITEMAN;
+	whiteCheckers.insert(75);
+	boardMatrix[5][5]=WHITEMAN;
+	whiteCheckers.insert(55);
+
+	boardMatrix[3][3]=BLACKMAN;
+	blackCheckers.insert(33);
+	boardMatrix[8][2]=BLACKMAN;
+	blackCheckers.insert(82);*/
 
 	checkers[WHITE]=whiteCheckers;
 	checkers[BLACK]=blackCheckers;
@@ -88,7 +98,7 @@ bool board::insideBoard(int i, int j) // READY
 }
 
 //checks if the checker in position (i,j) can make a jump move. Looks if the ending position is inside the board, and if there is a checker to jump.
-bool board::canJump(int directionI, int directionJ, int i, int j, int color) // READY
+bool board::canJump(int directionI, int directionJ, int i, int j, int color) //READY!
 {
 	if(insideBoard(i+directionI,j+directionJ)&&
 			(boardMatrix[i+directionI][j+directionJ]==(2-color)||boardMatrix[i+directionI][j+directionJ]==(4-color))&&
@@ -105,23 +115,26 @@ bool board::canJump(int directionI, int directionJ, int i, int j, int color) // 
  * 2 = White won
  * 3 = Black won
  */
-unsigned int board::terminal(){
-   /*if(whiteCheckers.size()==0 && blackCheckers.size()==0 &&    // Draw
+unsigned int board::terminal()//READY!
+{
+   if(whiteCheckers.size()==0 && blackCheckers.size()==0 &&    // Draw
            whiteKings.size()==1 && blackKings.size()==1){
        return 1;
-   } else if(getPossibleMoves(1).size()==0){        // White won
+   } else if(getPossibleMoves(1).size()==0){  // White won
+	   clean();
        return 2;
    } else if(getPossibleMoves(0).size()==0){        // Black won
+	   clean();
        return 3;
-   } else {  */                              // Not terminated
+   } else {                                // Not terminated
        return 0;
-   //}
+   }
 }
 
 //how many jumps can be made in a single move, 0 = white and 1 = black
 //sequence is the sequence of moves the player has to make
 //type 0=man, 1=king
-void board::calculateJumps(int i, int j, int sequence, int depth,int color, int type)// NO FIX NEEDED
+void board::calculateJumps(int i, int j, unsigned long long sequence, int depth,int color, int type,int originI,int originJ)//SUPPOSED TO BE READY
 {
 	int start,shift;
 
@@ -152,10 +165,10 @@ void board::calculateJumps(int i, int j, int sequence, int depth,int color, int 
 		directionI=1-(loop%2)*2;//it will take the values 1 and -1
 		directionJ=1-(loop/2)*2;//it will take the values 1 and -1
 
-		if(canJump(directionI,directionJ,i,j,color))//if there is a jumping move
+		if(canJump(directionI,directionJ,i,j,color)&&(directionI!=((-1)*originI)||directionJ!=(-1)*originJ))//if there is a jumping move
 		{
 
-			calculateJumps(i+2*directionI,j+2*directionJ,sequence+(j+2*directionJ)*(pow(10,depth+1))+(i+2*directionI)*(pow(10,depth+2)),depth+2, color,type ); //recursively check if we can extend the move
+			calculateJumps(i+2*directionI,j+2*directionJ,sequence+(j+2*directionJ)*(pow(10,depth+1))+(i+2*directionI)*(pow(10,depth+2)),depth+2, color,type,directionI,directionJ ); //recursively check if we can extend the move
 		}
 		else if(depth!=1)
 		{
@@ -166,7 +179,7 @@ void board::calculateJumps(int i, int j, int sequence, int depth,int color, int 
 }
 
 //calculates all the possible moves
-void board::calculatePossibleMoves(int color) //READY!
+void board::calculatePossibleMoves(int color) //
 {
 	int i,j;
 	forcedToMove=0;
@@ -177,8 +190,9 @@ void board::calculatePossibleMoves(int color) //READY!
 	auxiliaryCheckerList=&(checkers[color]);//this should be right, have to check it later
 
 
+
 	//checks the moves for all white checkers
-	for ( it=auxiliaryCheckerList->begin() ; it != auxiliaryCheckerList->end(); it++ )
+	for ( it=auxiliaryCheckerList->begin() ; it != auxiliaryCheckerList->end()&&auxiliaryCheckerList->size()!=0; it++ )
 	{
 		i=(*it) /10;
 		j=(*it) %10;
@@ -193,14 +207,14 @@ void board::calculatePossibleMoves(int color) //READY!
 				moves.insert((i*10)+j+((i+1-2*color)*1000)+(j-1)*100);
 		}
 
-		calculateJumps(i,j,(*it),1,color,0);
+		calculateJumps(i,j,(*it),1,color,0,4,4);//4 is a dummy number, never gonna be used
 	}
 
 	auxiliaryCheckerList=&(kings[color]);//this should be right, have to check it later
 
 
 	//checks the moves for all white kings
-	for ( it=auxiliaryCheckerList->begin() ; it != auxiliaryCheckerList->end(); it++ )
+	for ( it=auxiliaryCheckerList->begin() ; it != auxiliaryCheckerList->end()&&auxiliaryCheckerList->size()!=0; it++ )
 	{
 		i=(*it) /10;
 		j=(*it) %10;
@@ -221,7 +235,7 @@ void board::calculatePossibleMoves(int color) //READY!
 				moves.insert((i*10)+j+((i-1)*1000)+(j-1)*100);
 		}
 
-		calculateJumps(i,j,(*it),1,color,1);
+		calculateJumps(i,j,(*it),1,color,1,4,4);//4 is a dummy number, never gonna be used
 	}
 
 	if(!jumpMoves.empty())
@@ -230,7 +244,7 @@ void board::calculatePossibleMoves(int color) //READY!
 	}
 }
 
-std::set<unsigned int> board::getPossibleMoves(int color)// READY
+std::set<unsigned long long> board::getPossibleMoves(int color)// READY
 {
 	//if(moves.empty())
 	//{
@@ -250,6 +264,11 @@ void board::clean()//READY!
 	jumpMoves.clear();
 }
 
+void board::cleanUndo()//TO BE ERASED
+{
+	moveRecords.clear();
+}
+
 void board::undoMove()
 {
 	std::list<int> movesMade = moveRecords.back();
@@ -264,7 +283,7 @@ void board::undoMove()
 		type=(*myIterator)%10;
 		boardMatrix[i][j]=type;
 
-		//std::cout<<"\nUNDOING!"<<std::endl;
+		std::cout<<"\nUNDOING!"<<std::endl;
 
 		if(type==0)
 		{
@@ -273,38 +292,38 @@ void board::undoMove()
 			kings[0].erase(i*10+j);
 			kings[1].erase(i*10+j);
 
-		//	std::cout<<"Erasing piece in position :"<<i<<","<<j<<")"<<std::endl;
+			std::cout<<"Erasing piece in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==1)
 		{
 			checkers[0].insert(i*10+j);
-			//std::cout<<"Inserting white man in position :"<<i<<","<<j<<")"<<std::endl;
+			std::cout<<"Inserting white man in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==2)
 		{
 			checkers[1].insert(i*10+j);
-			//std::cout<<"Inserting black man in position :"<<i<<","<<j<<")"<<std::endl;
+			std::cout<<"Inserting black man in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==3)
 		{
 			kings[0].insert(i*10+j);
-			//std::cout<<"Inserting white king in position :"<<i<<","<<j<<")"<<std::endl;
+			std::cout<<"Inserting white king in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==4)
 		{
 			kings[1].insert(i*10+j);
-		//	std::cout<<"Inserting black king in position :"<<i<<","<<j<<")"<<std::endl;
+			std::cout<<"Inserting black king in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 	}
 
 	moveRecords.pop_back();
 }
 
-bool board::movePiece(int sequence, int color)//sequence is the sequence of numbers that represent the move, color=0 whiteMoves, color=1 blackMoves
+bool board::movePiece(unsigned long long sequence, int color)//sequence is the sequence of numbers that represent the move, color=0 whiteMoves, color=1 blackMoves
 {
 	int initialPosition,finalPosition,enemyPosition;
 	std::set<int> *auxiliaryCheckerList,*auxiliaryEnemyList;
@@ -315,7 +334,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 		initialPosition = (sequence%10)+((sequence/10)%10)*10;
 		finalPosition = (sequence/100)%10+(sequence/1000)*10;
 
-		//std::cout<<"Moving piece, NO JUMPS in this move"<<std::endl;
+		std::cout<<"Moving piece, NO JUMPS in this move"<<std::endl;
 
 		if(boardMatrix[initialPosition/10][initialPosition%10]==(1+color))
 		{
@@ -325,11 +344,11 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 
 			movesMade.push_back(initialPosition*10+1+color);
 
-			//std::cout<<"Erased man of color :"<<color<<" ,in position ("<<initialPosition/10<<","<<initialPosition%10<<")"<<std::endl;
+			std::cout<<"Erased man of color :"<<color<<" ,in position ("<<initialPosition/10<<","<<initialPosition%10<<")"<<std::endl;
 
 			movesMade.push_back(finalPosition*10+0);
 
-			//std::cout<<"Inserted man of color :"<<color<<" ,in position ("<<finalPosition/10<<","<<finalPosition%10<<")"<<std::endl;
+			std::cout<<"Inserted man of color :"<<color<<" ,in position ("<<finalPosition/10<<","<<finalPosition%10<<")"<<std::endl;
 
 			if(finalPosition/10==(1+!(color)*7))
 			{
@@ -353,7 +372,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 			boardMatrix[initialPosition/10][initialPosition%10]=0;
 			boardMatrix[finalPosition/10][finalPosition%10]=3+color;
 
-			movesMade.push_back(initialPosition*10+2+color);
+			movesMade.push_back(initialPosition*10+3+color);
 			movesMade.push_back(finalPosition*10+0);
 		}
 
@@ -365,7 +384,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 
 	}else if(jumpMoves.count(sequence)>0)
 	{
-		//std::cout<<"Moving piece, THERE ARE JUMPS in this move"<<std::endl;
+		std::cout<<"Moving piece, THERE ARE JUMPS in this move"<<std::endl;
 
 		int auxiliarySequence=sequence;
 
@@ -386,11 +405,11 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 				movesMade.push_back(finalPosition*10+0);
 				movesMade.push_back(enemyPosition*10+boardMatrix[enemyPosition/10][enemyPosition%10]);
 
-				//std::cout<<"Erased man of color :"<<color<<" ,in position ("<<initialPosition/10<<","<<initialPosition%10<<")"<<std::endl;
+				std::cout<<"Erased man of color :"<<color<<" ,in position ("<<initialPosition/10<<","<<initialPosition%10<<")"<<std::endl;
 
-		//		std::cout<<"Inserted man of color :"<<color<<" ,in position ("<<finalPosition/10<<","<<finalPosition%10<<")"<<std::endl;
+				std::cout<<"Inserted man of color :"<<color<<" ,in position ("<<finalPosition/10<<","<<finalPosition%10<<")"<<std::endl;
 
-//				std::cout<<"Erased enemy man of color :"<<!color<<" ,in position ("<<enemyPosition/10<<","<<enemyPosition%10<<")"<<std::endl;
+				std::cout<<"Erased enemy man of color :"<<!color<<" ,in position ("<<enemyPosition/10<<","<<enemyPosition%10<<")"<<std::endl;
 
 
 				if(finalPosition/10==(1+!(color)*7))
@@ -426,7 +445,7 @@ bool board::movePiece(int sequence, int color)//sequence is the sequence of numb
 				boardMatrix[initialPosition/10][initialPosition%10]=0;
 				boardMatrix[finalPosition/10][finalPosition%10]=3+color;
 
-				movesMade.push_back(initialPosition*10+2+color);
+				movesMade.push_back(initialPosition*10+3+color);
 				movesMade.push_back(finalPosition*10+0);
 				movesMade.push_back(enemyPosition*10+boardMatrix[enemyPosition/10][enemyPosition%10]);
 
@@ -479,8 +498,8 @@ void board::printBoardAlternative(){
 	std::cout<<"\n\n\n";
 }
 
-void board::printSet(std::set<unsigned int> &set) {
-	std::set<unsigned int>::iterator iter = set.begin();
+void board::printSet(std::set<unsigned long long> &set) {
+	std::set<unsigned long long>::iterator iter = set.begin();
 	for(; iter != set.end(); ++iter) {
 		std::cout<<*iter<<" ";
 	}
