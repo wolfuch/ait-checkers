@@ -19,7 +19,8 @@ int main(int argc, char **argv) {
 	std::set<int>::iterator iter;
 	std::set <int> list;
 	board* brd = new board();
-	Timer* timer = new Timer();
+	MUTEX* mutex= new MUTEX();
+	Timer* timer = new Timer(mutex);
 
 	/* Create players */
 	Player* whitePlayer = new HumanPlayer(0, "Marc");
