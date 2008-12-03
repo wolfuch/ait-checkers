@@ -11,16 +11,18 @@
 #define AIPLAYER_H_
 #include "Player.h"
 #include "Heuristic.h"
+#include "Thread.h"
 
 using namespace std;
 
 class AIPlayer: public Player {
 public:
-	AIPlayer(int color, string name);		// Create user
+	AIPlayer(int color, string name, MUTEX* mutex);		// Create user
 	~AIPlayer();							// Destroy user (Empty implementation yet)
 	void makeNextMove(board* b);			// Make the next best move
 private:
 	Heuristic* m_heuristic;
+	MUTEX* m_mutex;
 };
 
 #endif /* AIPLAYER_H_ */
