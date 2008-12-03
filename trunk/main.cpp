@@ -29,7 +29,6 @@ int main(int argc, char **argv) {
 	timer->start(NULL);		// starts new thread for time counting
 	//brd->cal
 	do {
-		//sleep(1);
 		// White player
 		brd->printBoardAlternative();
 		whitePlayer->makeNextMove(brd);
