@@ -24,19 +24,19 @@ int main(int argc, char **argv) {
 
 	/* Create players */
 	Player* whitePlayer = new HumanPlayer(0, "Marc");
-	Player* blackPlayer = new AIPlayer(1, "Abraham");
+	Player* blackPlayer = new AIPlayer(1, "Abraham", mutex);
 
 	timer->start(NULL);		// starts new thread for time counting
 	//brd->cal
 	do {
 		//sleep(1);
-//		// White player
-//		brd->printBoardAlternative();
-//		whitePlayer->makeNextMove(brd);
-//
-//		// Black player
-//		brd->printBoardAlternative();
-//		blackPlayer->makeNextMove(brd);
+		// White player
+		brd->printBoardAlternative();
+		whitePlayer->makeNextMove(brd);
+
+		// Black player
+		brd->printBoardAlternative();
+		blackPlayer->makeNextMove(brd);
 	} while (true);
 
 	timer->wait();
