@@ -19,6 +19,8 @@ public:
 	AIPlayer(int color, string name);		// Create user
 	~AIPlayer();							// Destroy user (Empty implementation yet)
 	void makeNextMove(board* b);			// Make the next best move
+private:
+	Heuristic* m_heuristic;
 };
 
 #endif /* AIPLAYER_H_ */
