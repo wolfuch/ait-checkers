@@ -12,9 +12,11 @@
 
 class Timer: public THREAD {
 public:
-	Timer();
+	Timer(MUTEX* mutex);
 	virtual ~Timer();
 	void* Run(void *prm);
+private:
+	MUTEX* mutex;
 };
 
 #endif /* TIMER_H_ */

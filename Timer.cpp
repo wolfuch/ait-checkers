@@ -9,9 +9,8 @@
 #include "Timer.h"
 #include <sys/time.h>
 
-Timer::Timer() {
-	// TODO Auto-generated constructor stub
-
+Timer::Timer(MUTEX* mutex) {
+	this->mutex = mutex;
 }
 
 Timer::~Timer() {
@@ -19,6 +18,17 @@ Timer::~Timer() {
 }
 
 void* Timer::Run(void* param) {
-	sleep(180*1000 -2);   // wait 3min - 2sec for safety
-	std::cout<<"-------- 3min! ------------"<<std::endl;
+	int i;
+
+	mutex->acquire();
+
+	while(1) {
+		mutex->acquire();		// mutex down, wait for signal to count time
+		for(i=1; i<17; ++i) {	// wait for 2:50
+			sleep(i*10*1000);
+			std::cout<<"time: "<<i*10*1000<<std::endl;
+		}
+		sleep(8*1000);			// wait for 8 sec, 2 less for safety
+		std::cout<<"-------- 3min! ------------"<<std::endl;
+	}
 }
