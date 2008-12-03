@@ -43,10 +43,10 @@ public:
 		const board &operator=( const board & rhs); //not implemented
 		void printBoard(); //prints the board to screen
 		void printBoardAlternative(); //prints the board to screen
-		std::set <unsigned int> getPossibleMoves(int color); //get the possible moves, if input is 0 all possible white moves, if input is 1 all possible black moves
+		std::set <unsigned long long> getPossibleMoves(int color); //get the possible moves, if input is 0 all possible white moves, if input is 1 all possible black moves
 		void calculatePossibleMoves(int color); //calculates the moves but doesn't return them, it's used by get PossibleMoves
 		int** getBoard();//returns the board in the form of an array
-		bool movePiece(int sequence,int color);//moves a checker (not implemented, YET)
+		bool movePiece(unsigned long long sequence,int color);//moves a checker (not implemented, YET)
 		void undoMove();//undo the last move, erasing the current state;
 		std::set<int> getWhiteCheckers(){return checkers[0];};
 		std::set<int> getBlackCheckers(){return checkers[1];};
@@ -54,17 +54,19 @@ public:
 		std::set<int> getBlackKings(){return kings[1];};
 		unsigned int terminal();
 		void clean();
-		void printSet(std::set<unsigned int> &set);
+		void printSet(std::set<unsigned long long> &set);
+		void cleanUndo();
+		std::list< std::list<int> > moveRecords; //necessary to undo moves
 
 protected:
 
 private:
 		bool canJump(int directionI, int directionJ, int i, int j,int color);//sees if there is a possibility for a jump
 		bool insideBoard(int i, int j); //checks if the postion is inside the board
-		void calculateJumps(int i, int j,int sequence, int depth, int color, int type);//how many jumps can be made in a single move
+		void calculateJumps(int i, int j,unsigned long long sequence, int depth, int color, int type,int originI,int originJ);//how many jumps can be made in a single move
 		int forcedToMove; //if one there is at least one move were there is a jump
-		std::set<unsigned int> moves; //list of all moves
-		std::set<unsigned int> jumpMoves; //list of jumps moves
+		std::set<unsigned long long> moves; //list of all moves
+		std::set<unsigned long long> jumpMoves; //list of jumps moves
 		int **boardMatrix; //0 = free position, 1 = normal white, 2 = normal black, 3 = king white, 4 = king black
 		std::set<int> whiteCheckers; //all whiteCheckers positions
 		std::set<int> whiteKings; //all whiteKings positions
@@ -72,7 +74,6 @@ private:
 		std::set<int> blackKings; //all blackKings positions
 		std::set<int> checkers[2]; //all checkers positions, 0 is all the white checkers, 1 all black checkers
 		std::set<int> kings[2]; //all kings position, 0 is all the white kings, 1 all the black kings
-		std::list< std::list<int> > moveRecords; //necessary to undo moves
 };
 
 #endif // _BOARD_HPP_
