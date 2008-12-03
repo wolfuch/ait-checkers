@@ -35,7 +35,7 @@ board::board() //READY!
 
 	for(int i=1;i<4;i++)//We put the white checkers on the board
 	{
-		for(int j=i%2+1;j<9;j+=2)
+		for(int j=i%2;j<9;j+=2)
 		{
 			boardMatrix[i][j]=WHITEMAN;
 			whiteCheckers.insert(i*10+j); //we add the checkers to the list
@@ -45,7 +45,7 @@ board::board() //READY!
 	for(int i=6;i<9;i++)//We put the black checkers on the board
 	{
 
-		for(int j=i%2+1;j<9;j+=2)
+		for(int j=i%2;j<9;j+=2)
 		{
 			boardMatrix[i][j]=BLACKMAN;
 			blackCheckers.insert(i*10+j);//we add the checkers to the blackCheckers list
