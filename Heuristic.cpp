@@ -23,7 +23,7 @@ unsigned int Heuristic::bestMove(board* b, int color) {
 	int iterativeMaxLevel = 3;		// max level for iterative deepening search
 	this->b = b;
 	this->color = color;
-	maxLevel = 10;
+	maxLevel = 5;
 	iteration = 0;
 
 
@@ -103,12 +103,16 @@ int Heuristic::evaluation() {
 int Heuristic::minMax(int level, int alpha, int beta) {
 	int tmp = 0;    // temporary value which is compared to max value
 	int winCheck=0;
-	set<unsigned int> tempMoveSet,tempMoveSet2;
-	set<unsigned int>::iterator iter, iterEnd;
+	set<unsigned long long> tempMoveSet,tempMoveSet2;
+	set<unsigned long long>::iterator iter, iterEnd;
 
 	iteration++;
-	// std::cout<<"iteration "<<iteration;
-	//std::cout<<std::endl<<"level: "<<level<<" ";
+	if(iteration==2685)
+	{
+		int number=1;
+	}
+	std::cout<<"iteration "<<iteration;
+	std::cout<<std::endl<<"level: "<<level<<" ";
 
 	winCheck = b->terminal();
 	if (winCheck == color+2)     // computer wins
@@ -135,17 +139,18 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 		iterEnd = tempMoveSet.end();
 
 		for (; iter != iterEnd; ++iter) {
+			std::cout<<level<<std::endl;
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, color);
-			//b->printBoardAlternative();
+			b->printBoardAlternative();
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			//b->printBoardAlternative();
-			//tempMoveSet2 = b->getPossibleMoves(color);
+			b->printBoardAlternative();
+			tempMoveSet2 = b->getPossibleMoves(color);
 			b->clean();
-			//std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
-			//std::cout<<"*old calculated : ";b->printSet(tempMoveSet);
+			std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
+			std::cout<<"*old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(color);
 			if (tmp > alpha) {
 				alpha = tmp;
@@ -167,17 +172,18 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 		iterEnd = tempMoveSet.end();
 
 		for (; iter != iterEnd; ++iter) {
+			std::cout<<level<<std::endl;
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, !color);
-			//b->printBoardAlternative();
+			b->printBoardAlternative();
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			//b->printBoardAlternative();
-			//tempMoveSet2 = b->getPossibleMoves(!color);
+			b->printBoardAlternative();
+			tempMoveSet2 = b->getPossibleMoves(!color);
 			b->clean();
-			//std::cout<<"recently calculated : ";b->printSet(tempMoveSet2);
-			//std::cout<<"old calculated : ";b->printSet(tempMoveSet);
+			std::cout<<"recently calculated : ";b->printSet(tempMoveSet2);
+			std::cout<<"old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(!color);
 			if (tmp < beta) {
 				beta = tmp;
