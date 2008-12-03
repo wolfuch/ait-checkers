@@ -23,16 +23,22 @@ HumanPlayer::~HumanPlayer() {
  * If not, the player will be asked as long until he enters a legal move.
  */
 void HumanPlayer::makeNextMove(board* b){
-	unsigned long long move = 0;		// Move "sequence"
+	unsigned int move = 0;		// Move "sequence"
 	bool moved = false;			// If the tried move has been made (was legal) or not.
+	set<unsigned long long> tempMoveSet,tempMoveSet2;
 
 	/* Ask move until it is a legal one */
 	while(!moved){
+		b->calculatePossibleMoves(m_color);		// Moves have to be calculated before moving
+		tempMoveSet2 = b->getPossibleMoves(m_color);
+		std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
 		cout << "Player '" << m_name << "':" << endl;
 		cout << "What will be your move?:  ";
 		cin >> move;		// Combine moveFrom and moveTo
 		cout << "Move = " << move << endl;
-		b->calculatePossibleMoves(m_color);		// Moves have to be calculated before moving
+
 		moved = b->movePiece(move, m_color);	// TRY
 	}
+
+	b->cleanUndo();
 }
