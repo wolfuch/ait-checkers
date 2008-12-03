@@ -23,7 +23,7 @@ HumanPlayer::~HumanPlayer() {
  * If not, the player will be asked as long until he enters a legal move.
  */
 void HumanPlayer::makeNextMove(board* b){
-	unsigned int move = 0;		// Move "sequence"
+	unsigned long long move = 0;		// Move "sequence"
 	bool moved = false;			// If the tried move has been made (was legal) or not.
 
 	/* Ask move until it is a legal one */
