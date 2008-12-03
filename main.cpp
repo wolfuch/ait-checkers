@@ -19,14 +19,16 @@ int main(int argc, char **argv) {
 	std::set<int>::iterator iter;
 	std::set <int> list;
 	board* brd = new board();
-	MUTEX* mutex= new MUTEX();
-	Timer* timer = new Timer(mutex);
+	MUTEX* mutex;
+
+	//int color=0;
+	//std::cout<<(1+!(color)*7)<<std::endl;
 
 	/* Create players */
-	Player* whitePlayer = new HumanPlayer(0, "Marc");
+	Player* whitePlayer = new AIPlayer(0, "Marc", mutex);
 	Player* blackPlayer = new AIPlayer(1, "Abraham", mutex);
 
-	timer->start(NULL);		// starts new thread for time counting
+	//timer->start(NULL);		// starts new thread for time counting
 	//brd->cal
 	do {
 		// White player
@@ -37,9 +39,6 @@ int main(int argc, char **argv) {
 		brd->printBoardAlternative();
 		blackPlayer->makeNextMove(brd);
 	} while (true);
-
-	timer->wait();
-	timer->stop();
 	return 0;
 }
 
