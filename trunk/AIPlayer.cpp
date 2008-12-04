@@ -10,24 +10,25 @@
 #include "AIPlayer.h"
 
 /* Initializes the player with color and name */
-AIPlayer::AIPlayer(int color, string name,MUTEX* mutex) {
+AIPlayer::AIPlayer(int color, string name, MUTEX* mutex) {
 	m_color = color;
 	m_name = name;
-
+	m_mutex = mutex;
+	m_heuristic = new Heuristic();
 }
 
 AIPlayer::~AIPlayer() {
-	// TODO Auto-generated destructor stub
+	delete m_heuristic;
 }
 
 /* Requests the best move from the Heuristic and makes the move */
 void AIPlayer::makeNextMove(board* b){
 	bool moved=false;
+	m_mutex->release();
 	while(!moved)
 	{
-		Heuristic* h = new Heuristic();
 		b->calculatePossibleMoves(m_color);					// Moves have to be calculated before moving
-		moved=b->movePiece(h->bestMove(b, m_color), m_color);		// TRY
+		moved=b->movePiece(m_heuristic->bestMove(b, m_color), m_color);		// TRY
 		b->cleanUndo();
 	}
 }
