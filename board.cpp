@@ -53,16 +53,6 @@ board::board() //READY!
 		}
 	}
 
-	/*boardMatrix[7][5]=WHITEMAN;
-	whiteCheckers.insert(75);
-	boardMatrix[5][5]=WHITEMAN;
-	whiteCheckers.insert(55);
-
-	boardMatrix[3][3]=BLACKMAN;
-	blackCheckers.insert(33);
-	boardMatrix[8][2]=BLACKMAN;
-	blackCheckers.insert(82);*/
-
 	checkers[WHITE]=whiteCheckers;
 	checkers[BLACK]=blackCheckers;
 
