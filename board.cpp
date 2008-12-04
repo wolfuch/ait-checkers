@@ -127,6 +127,7 @@ unsigned int board::terminal()//READY!
 //type 0=man, 1=king
 void board::calculateJumps(int i, int j, unsigned long long sequence, int depth,int color, int type,std::list<int> previousPositions)//SUPPOSED TO BE READY
 {
+	bool jumped=false;
 	int start,shift;
 
 	if(type==0&&depth!=1&&sequence/pow(10,depth)==(1+!(color)*7))//checks if the piece is at the end of the board
@@ -158,17 +159,19 @@ void board::calculateJumps(int i, int j, unsigned long long sequence, int depth,
 
 		if(canJump(directionI,directionJ,i,j,color))//if there is a jumping move
 		{
+			jumped =true;
 			previousPositions.push_back(boardMatrix[i+directionI][j+directionJ]);
 			boardMatrix[i+directionI][j+directionJ]=0;
 			calculateJumps(i+2*directionI,j+2*directionJ,sequence+(j+2*directionJ)*(pow(10,depth+1))+(i+2*directionI)*(pow(10,depth+2)),depth+2, color,type,previousPositions ); //recursively check if we can extend the move
 			boardMatrix[i+directionI][j+directionJ]=previousPositions.back();
 			previousPositions.pop_back();
 		}
-		else if(depth!=1)
-		{
-			jumpMoves.insert(sequence); //if no more jumps can be made we store the move
-			forcedToMove=1;
-		}
+	}
+
+	if(!jumped&&depth!=1)
+	{
+		jumpMoves.insert(sequence); //if no more jumps can be made we store the move
+		forcedToMove=1;
 	}
 }
 
