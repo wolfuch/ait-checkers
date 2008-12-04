@@ -206,6 +206,7 @@ void board::calculatePossibleMoves(int color) //
 		}
 
 		previousPositions.push_back(boardMatrix[i][j]);
+		boardMatrix[i][j]=0;
 		calculateJumps(i,j,(*it),1,color,0,previousPositions);//4 is a dummy number, never gonna be used
 		boardMatrix[i][j]=previousPositions.back();
 		previousPositions.pop_back();
@@ -237,6 +238,7 @@ void board::calculatePossibleMoves(int color) //
 		}
 
 		previousPositions.push_back(boardMatrix[i][j]);
+		boardMatrix[i][j]=0;
 		calculateJumps(i,j,(*it),1,color,1,previousPositions);//4 is a dummy number, never gonna be used
 		boardMatrix[i][j]=previousPositions.back();
 		previousPositions.pop_back();
