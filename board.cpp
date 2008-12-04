@@ -390,7 +390,7 @@ bool board::movePiece(unsigned long long sequence, int color)//sequence is the s
 	{
 		//std::cout<<"Moving piece, THERE ARE JUMPS in this move"<<std::endl;
 
-		int auxiliarySequence=sequence;
+		unsigned long long auxiliarySequence=sequence;
 
 		while(sequence/100>0)
 		{
