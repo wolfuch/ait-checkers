@@ -17,7 +17,7 @@ using namespace std;
 
 
 	 #define PIECE_VALUE  100		// TODO: add static const
-	 #define KING_VALUE  200
+	 #define KING_VALUE  230
 	 #define CORNER_PENALTY  40
 	 #define EDGE_PENALTY  20
 	 #define PLUS_INFINITY    1000000

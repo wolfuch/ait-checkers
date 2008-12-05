@@ -24,7 +24,7 @@ unsigned int Heuristic::bestMove(board* b, int color) {
 	this->b = b;
 	this->color = color;
 
-	maxLevel = 7;
+	maxLevel = 9;
 	iteration = 0;
 	counter = 0;
 	firstMove = false;
