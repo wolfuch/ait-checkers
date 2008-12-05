@@ -32,3 +32,7 @@ void AIPlayer::makeNextMove(board* b){
 		b->cleanUndo();
 	}
 }
+
+string AIPlayer::getName(){
+	return m_name;
+}

@@ -20,6 +20,7 @@ public:
 	HumanPlayer(int color, string name);		// Creates user
 	~HumanPlayer();								// Destroys user
 	void makeNextMove(board* b);				// Requests the move from the user
+	string getName();
 };
 
 #endif /* HUMANPLAYER_H_ */

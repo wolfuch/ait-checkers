@@ -42,3 +42,7 @@ void HumanPlayer::makeNextMove(board* b){
 
 	b->cleanUndo();
 }
+
+string HumanPlayer::getName(){
+	return m_name;
+}

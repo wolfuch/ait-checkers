@@ -22,6 +22,7 @@ public:
 	Player();				// Constructor
 	~Player();				// Destructor
 	virtual void makeNextMove(board* board)=0;	//Interface for the next move
+	virtual string getName()=0;
 };
 
 #endif /* PLAYER_H_ */
