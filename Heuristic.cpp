@@ -20,16 +20,31 @@ Heuristic::~Heuristic() {
 
 
 unsigned int Heuristic::bestMove(board* b, int color) {
-	int iterativeMaxLevel = 3;		// max level for iterative deepening search
+	int iterativeMaxLevel = 7;		// max level for iterative deepening search
 	this->b = b;
 	this->color = color;
-	maxLevel = 1;
+
+	maxLevel = 7;
 	iteration = 0;
+	counter = 0;
+	firstMove = false;
+	for(int i=0; i<ARRAY_SIZE; ++i) {
+		bestLeafPath[i] = 0;
+		tmpLeafPath[i] = 0;
+	}
 
-
-	//for (maxLevel=0; maxLevel <= iterativeMaxLevel; ++maxLevel) {
-	minMax(0, MINUS_INFINITY, PLUS_INFINITY);
-	//}
+	working = true;
+//	for (maxLevel=1; maxLevel <= iterativeMaxLevel; ++maxLevel) {
+		if (maxLevel % 2 == 0)
+			bestLeafValue = PLUS_INFINITY;
+		else
+			bestLeafValue = MINUS_INFINITY;
+		iteration = 0;
+		minMax(0, MINUS_INFINITY, PLUS_INFINITY);
+		std::cout<<iteration<<std::endl;
+//		firstMove = true;
+//	}
+	working = false;
 	return actualMove;
 }
 
@@ -41,7 +56,7 @@ int Heuristic::evaluation() {
 
 
 	// white pieces
-	for(setIterator = (b->getWhiteCheckers()).begin(); setIterator != (b->getWhiteCheckers()).end(); ++setIterator)
+	for(setIterator = b->checkers[0].begin(); setIterator != b->checkers[0].end(); ++setIterator)
 	{
 		y = *setIterator / 10;
 		// x = *setIterator % 10;    // maybe used in future
@@ -50,7 +65,7 @@ int Heuristic::evaluation() {
 
 	// white kings
 	if(!(b->getWhiteKings()).empty())
-		for(setIterator = (b->getWhiteKings()).begin(); setIterator != (b->getWhiteKings()).end(); ++setIterator)
+		for(setIterator = b->kings[0].begin(); setIterator != b->kings[0].end(); ++setIterator)
 		{
 			y = *setIterator / 10;
 			x = *setIterator % 10;
@@ -66,7 +81,7 @@ int Heuristic::evaluation() {
 		}
 
 	// black pieces
-	for(setIterator = (b->getBlackCheckers()).begin(); setIterator != (b->getBlackCheckers()).end(); ++setIterator)
+	for(setIterator = b->checkers[1].begin(); setIterator != b->checkers[1].end(); ++setIterator)
 	{
 		y = 9 - (*setIterator / 10);
 		// x = *setIterator % 10;    // maybe used in future
@@ -75,7 +90,7 @@ int Heuristic::evaluation() {
 
 	// black kings
 	if(!(b->getBlackKings()).empty())
-		for(setIterator = (b->getBlackKings()).begin(); setIterator != (b->getBlackKings()).end(); ++setIterator)
+		for(setIterator = b->kings[1].begin(); setIterator != b->kings[1].end(); ++setIterator)
 		{
 			y = 9 - (*setIterator / 10);
 			x = *setIterator % 10;
@@ -103,16 +118,12 @@ int Heuristic::evaluation() {
 int Heuristic::minMax(int level, int alpha, int beta) {
 	int tmp = 0;    // temporary value which is compared to max value
 	int winCheck=0;
-	set<unsigned long long> tempMoveSet,tempMoveSet2;
-	set<unsigned long long>::iterator iter, iterEnd;
 
-	iteration++;
-	if(iteration==2685)
-	{
-		int number=1;
-	}
-	//std::cout<<"iteration :"<<iteration<< " \t";
-	//std::cout<<std::endl<<"level: "<<level<<" ";
+	set<unsigned long long int> tempMoveSet;
+	set<unsigned long long int>::iterator iter, iterEnd, iterTmp;
+
+
+
 
 	winCheck = b->terminal();
 	if (winCheck == color+2)     // computer wins
@@ -125,75 +136,123 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 
 	// Leaf
 	if (level == maxLevel) {
-		//evaluation();
-		//std::cout<<"Level LEAF:"<<level<<std::endl;
-		return evaluation();
+		tmp = evaluation();
+		iteration++;
+		if (level % 2 == 0) {		// min of evaluation function
+			if (tmp < bestLeafValue) {
+				bestLeafValue = tmp;
+				for(int i=0; i<ARRAY_SIZE; ++i) {
+						bestLeafPath[i] = tmpLeafPath[i];
+				}
+			}
+		}
+		else						// max of evaluation function
+		{
+			if (tmp > bestLeafValue) {
+				bestLeafValue = tmp;
+				for(int i=0; i<ARRAY_SIZE; ++i) {
+						bestLeafPath[i] = tmpLeafPath[i];
+				}
+			}
+		}
+		return tmp;
 	}
 
+
 	// MAX
-	if (level % 2 == 0)
-	{
+	if (level % 2 == 0) {
 
 		// getting possible moves
-		b->clean();
 		b->calculatePossibleMoves(color);
 		tempMoveSet = b->getPossibleMoves(color);
+
+		// look for the best move already found and replace it with the first from the set
+		if (firstMove) {
+			if (level == maxLevel-2) {
+				firstMove = false;
+			}
+			tempMoveSet.erase(bestLeafPath[level]);
+
+			// copied part from above
+			b->movePiece(bestLeafPath[level], color);
+			tmpLeafPath[level] = bestLeafPath[level];
+			tmp = minMax(level+1, alpha, beta);
+			b->undoMove();
+			tmpLeafPath[level] = 0;
+			b->clean();
+			b->calculatePossibleMoves(color);
+			if (tmp > alpha) {
+				alpha = tmp;
+				if (level == 0) {
+					actualMove = bestLeafPath[level];
+				}
+			}
+		}
+
 		iter = tempMoveSet.begin();
 		iterEnd = tempMoveSet.end();
 
-		//std::cout<<"Level MAX:"<<level<<std::endl;
-
-		for (; iter != iterEnd; ++iter)
-		{
+		for (; iter != iterEnd; ++iter) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, color);
-			//b->printBoardAlternative();
+			tmpLeafPath[level] = *iter;
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			//b->printBoardAlternative();
-			//tempMoveSet2 = b->getPossibleMoves(color);
+			tmpLeafPath[level] = 0;
 			b->clean();
-			//std::cout<<"*recently calculated : ";b->printSet(tempMoveSet2);
-			//std::cout<<"*old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(color);
-
-			if (tmp > alpha)
-			{
+			if (tmp > alpha) {
 				alpha = tmp;
-				if (level == 0)
-				{
+				if (level == 0) {
 					actualMove = *iter;
 				}
 			}
 		}
 		return alpha;
-	}else {// MIN
+	}
+
+	// MIN
+	else {
 
 		// getting possible moves
-		b->clean();
 		b->calculatePossibleMoves(!color);
 		tempMoveSet = b->getPossibleMoves(!color);
+
+		// look for the best move already found and replace it with the first from the set
+		if (firstMove) {
+			if (level == maxLevel-2) {
+				firstMove = false;
+			}
+			tempMoveSet.erase(bestLeafPath[level]);
+
+			// copied part from above
+			b->movePiece(bestLeafPath[level], !color);
+			tmpLeafPath[level] = bestLeafPath[level];
+			tmp = minMax(level+1, alpha, beta);
+			b->undoMove();
+			tmpLeafPath[level] = 0;
+			b->clean();
+			b->calculatePossibleMoves(!color);
+			if (tmp < beta) {
+				beta = tmp;
+			}
+		}
+
 		iter = tempMoveSet.begin();
 		iterEnd = tempMoveSet.end();
 
-		//std::cout<<"Level MIN:"<<level<<std::endl;
-		for (; iter != iterEnd; ++iter)
-		{
+		for (; iter != iterEnd; ++iter) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, !color);
-			//b->printBoardAlternative();
+			tmpLeafPath[level] = *iter;
 			tmp = minMax(level+1, alpha, beta);
 			b->undoMove();
-			//b->printBoardAlternative();
-			//tempMoveSet2 = b->getPossibleMoves(!color);
+			tmpLeafPath[level] = 0;
 			b->clean();
-			//std::cout<<"recently calculated : ";b->printSet(tempMoveSet2);
-			//std::cout<<"old calculated : ";b->printSet(tempMoveSet);
 			b->calculatePossibleMoves(!color);
-			if (tmp < beta)
-			{
+			if (tmp < beta) {
 				beta = tmp;
 			}
 		}
@@ -203,3 +262,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 }
 
 
+bool Heuristic::isWorking()
+{
+	return working;
+}
