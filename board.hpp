@@ -58,6 +58,12 @@ public:
 		void cleanUndo();
 		std::list< std::list<int> > moveRecords; //necessary to undo moves
 
+		/* DANGEROUS!!! (Kids, don't try this at home!) */
+		std::set<int> whiteCheckers; //all whiteCheckers positions
+		std::set<int> whiteKings; //all whiteKings positions
+		std::set<int> blackCheckers; //all blackCheckers positions
+		std::set<int> blackKings; //all blackKings positions
+
 protected:
 
 private:
@@ -68,10 +74,7 @@ private:
 		std::set<unsigned long long> moves; //list of all moves
 		std::set<unsigned long long> jumpMoves; //list of jumps moves
 		int **boardMatrix; //0 = free position, 1 = normal white, 2 = normal black, 3 = king white, 4 = king black
-		std::set<int> whiteCheckers; //all whiteCheckers positions
-		std::set<int> whiteKings; //all whiteKings positions
-		std::set<int> blackCheckers; //all blackCheckers positions
-		std::set<int> blackKings; //all blackKings positions
+
 		std::set<int> checkers[2]; //all checkers positions, 0 is all the white checkers, 1 all black checkers
 		std::set<int> kings[2]; //all kings position, 0 is all the white kings, 1 all the black kings
 };
