@@ -282,14 +282,13 @@ void board::undoMove()
 
 	int i,j,type;
 
-	for(myIterator=movesMade.begin();myIterator!=movesMade.end();myIterator++)
+	for(;!movesMade.empty();)
 	{
-		i=(*myIterator)/100;
-		j=((*myIterator)/10)%10;
-		type=(*myIterator)%10;
+		i=(movesMade.back())/100;
+		j=((movesMade.back())/10)%10;
+		type=(movesMade.back())%10;
+		movesMade.pop_back();
 		boardMatrix[i][j]=type;
-
-		//std::cout<<"\nUNDOING!"<<std::endl;
 
 		if(type==0)
 		{
@@ -298,31 +297,26 @@ void board::undoMove()
 			kings[0].erase(i*10+j);
 			kings[1].erase(i*10+j);
 
-			//std::cout<<"Erasing piece in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==1)
 		{
 			checkers[0].insert(i*10+j);
-			//std::cout<<"Inserting white man in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==2)
 		{
 			checkers[1].insert(i*10+j);
-			//std::cout<<"Inserting black man in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==3)
 		{
 			kings[0].insert(i*10+j);
-			//std::cout<<"Inserting white king in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 
 		if(type==4)
 		{
 			kings[1].insert(i*10+j);
-			//std::cout<<"Inserting black king in position :"<<i<<","<<j<<")"<<std::endl;
 		}
 	}
 
