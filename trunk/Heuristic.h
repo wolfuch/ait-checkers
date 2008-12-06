@@ -10,8 +10,11 @@
 #ifndef HEURISTIC_H_
 #define HEURISTIC_H_
 #include "board.hpp"
+#include "AIPlayer.h"
 #include <set>
 #include <iostream>
+
+class AIPlayer;
 
 using namespace std;
 
@@ -27,23 +30,24 @@ using namespace std;
 class Heuristic {
 public:
 	Heuristic();
+	Heuristic(AIPlayer * aiPlayer);
 	~Heuristic();
 	unsigned int bestMove(board* b, int color);
-	bool isWorking();
+	void timeoutOccured();
 private:
+	unsigned long long timeoutMove;
 	bool firstMove;
 	int bestLeafValue;
 	unsigned long long bestLeafPath[ARRAY_SIZE];		// best current path
-	unsigned long long tmpLeafPath[ARRAY_SIZE];			// current path
 	unsigned int actualMove;		// the best move founded form the beginning
 	int evaluation();
-	int minMax(int level, int alpha, int beta);
+	int minMax(int level, int alpha, int beta, unsigned long long * downArray);
 	board* b;
 	int color;		// 0 - white, 1 - black
 	int maxLevel;
 	int iteration;
 	int counter;
-	bool working;
+	AIPlayer *aiPlayer;
 };
 
 #endif /* HEURISTIC_H_ */

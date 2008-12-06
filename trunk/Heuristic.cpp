@@ -8,9 +8,15 @@
  */
 
 #include "Heuristic.h"
+#include <string.h>
+
 
 Heuristic::Heuristic() {
-	// TODO Auto-generated constructor stub
+
+}
+
+Heuristic::Heuristic(AIPlayer *aiPlayer) {
+	this->aiPlayer =  aiPlayer;
 
 }
 
@@ -20,31 +26,43 @@ Heuristic::~Heuristic() {
 
 
 unsigned int Heuristic::bestMove(board* b, int color) {
-	int iterativeMaxLevel = 7;		// max level for iterative deepening search
+	int iterativeMaxLevel = ARRAY_SIZE;		// max level for iterative deepening search
 	this->b = b;
 	this->color = color;
+	unsigned long long upArray[ARRAY_SIZE];
 
-	maxLevel = 9;
+	memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);
+
+	int sum=0;
+	timeoutMove = 0;
+
+	//maxLevel = 4;
 	iteration = 0;
 	counter = 0;
 	firstMove = false;
 	for(int i=0; i<ARRAY_SIZE; ++i) {
 		bestLeafPath[i] = 0;
-		tmpLeafPath[i] = 0;
 	}
 
-	working = true;
-//	for (maxLevel=1; maxLevel <= iterativeMaxLevel; ++maxLevel) {
-		if (maxLevel % 2 == 0)
-			bestLeafValue = PLUS_INFINITY;
-		else
-			bestLeafValue = MINUS_INFINITY;
+	b->calculatePossibleMoves(color);
+	if (b->getPossibleMoves(color).size() == 1)
+		return *(b->getPossibleMoves(color).begin());
+
+	for (maxLevel=1; maxLevel <= iterativeMaxLevel; ++maxLevel) {
+		memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);		// filling array with 0
 		iteration = 0;
-		minMax(0, MINUS_INFINITY, PLUS_INFINITY);
+		minMax(0, MINUS_INFINITY, PLUS_INFINITY, upArray);
+		for (int i=0; i<ARRAY_SIZE; ++i) {								// copy best move found in last minMax
+			bestLeafPath[i] = upArray[i];
+		}
 		std::cout<<iteration<<std::endl;
-//		firstMove = true;
-//	}
-	working = false;
+		sum += iteration;
+		firstMove = true;
+	}
+	std::cout<<std::endl<<"sum: "<<sum<<std::endl;
+	if (timeoutMove > 0 ) {			// timeout occurred, get last best value
+		return timeoutMove;
+	}
 	return actualMove;
 }
 
@@ -53,6 +71,7 @@ int Heuristic::evaluation() {
 	int sumBlack = 0;
 	int x,y;
 	std::set<int>::iterator setIterator;
+
 
 
 	// white pieces
@@ -115,7 +134,7 @@ int Heuristic::evaluation() {
 
 }
 
-int Heuristic::minMax(int level, int alpha, int beta) {
+int Heuristic::minMax(int level, int alpha, int beta, unsigned long long downArray[]) {
 	int tmp = 0;    // temporary value which is compared to max value
 	int winCheck=0;
 
@@ -123,11 +142,14 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 	set<unsigned long long int>::iterator iter, iterEnd, iterTmp;
 
 
+	if (!aiPlayer->working) {			// if timeout!
+		return 0;		// value doesn't matter
+	}
 
 
 	winCheck = b->terminal();
 	if (winCheck == color+2)     // computer wins
-		return PLUS_INFINITY;
+		return PLUS_INFINITY / level;
 	if (winCheck == 1)     // draw
 		return 0;
 	if (winCheck != 0)              // opponent wins
@@ -136,26 +158,8 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 
 	// Leaf
 	if (level == maxLevel) {
-		tmp = evaluation();
 		iteration++;
-		if (level % 2 == 0) {		// min of evaluation function
-			if (tmp < bestLeafValue) {
-				bestLeafValue = tmp;
-				for(int i=0; i<ARRAY_SIZE; ++i) {
-						bestLeafPath[i] = tmpLeafPath[i];
-				}
-			}
-		}
-		else						// max of evaluation function
-		{
-			if (tmp > bestLeafValue) {
-				bestLeafValue = tmp;
-				for(int i=0; i<ARRAY_SIZE; ++i) {
-						bestLeafPath[i] = tmpLeafPath[i];
-				}
-			}
-		}
-		return tmp;
+		return evaluation();
 	}
 
 
@@ -166,27 +170,33 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 		b->calculatePossibleMoves(color);
 		tempMoveSet = b->getPossibleMoves(color);
 
-		// look for the best move already found and replace it with the first from the set
+
 		if (firstMove) {
-			if (level == maxLevel-2) {
+			if (level == maxLevel-2) {		// in next minMax call start exploring tree without first move path
 				firstMove = false;
 			}
-			tempMoveSet.erase(bestLeafPath[level]);
+			tempMoveSet.erase(bestLeafPath[level]);		// delete best move from the set
 
 			// copied part from above
-			b->movePiece(bestLeafPath[level], color);
-			tmpLeafPath[level] = bestLeafPath[level];
-			tmp = minMax(level+1, alpha, beta);
+			b->movePiece(bestLeafPath[level], color);	// do the best move
+			unsigned long long * upArray;		// array given to upper minMax call
+			upArray = new unsigned long long [ARRAY_SIZE];
+			memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);		// cleaning array with 0
+			tmp = minMax(level+1, alpha, beta, upArray);
 			b->undoMove();
-			tmpLeafPath[level] = 0;
 			b->clean();
 			b->calculatePossibleMoves(color);
 			if (tmp > alpha) {
 				alpha = tmp;
+				downArray[level] = bestLeafPath[level];						// store best move so far (at current level)
+				for(int i = level+1; i<maxLevel; ++i) {			// copy good moves from higher levels
+					downArray[i] = upArray[i];
+				}
 				if (level == 0) {
 					actualMove = bestLeafPath[level];
 				}
 			}
+			delete[] upArray;
 		}
 
 		iter = tempMoveSet.begin();
@@ -196,18 +206,28 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, color);
-			tmpLeafPath[level] = *iter;
-			tmp = minMax(level+1, alpha, beta);
+			unsigned long long * upArray;		// array given to upper minMax call
+			upArray = new unsigned long long [ARRAY_SIZE];
+			memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);		// cleaning array with 0
+			tmp = minMax(level+1, alpha, beta, upArray);
 			b->undoMove();
-			tmpLeafPath[level] = 0;
 			b->clean();
 			b->calculatePossibleMoves(color);
 			if (tmp > alpha) {
 				alpha = tmp;
+				downArray[level] = *iter;						// store best move so far (at current level)
+//std::cout<<std::endl<<"level: "<<level<<" downArray: ";
+				for(int i = level+1; i<maxLevel; ++i) {			// copy good moves from higher levels
+					downArray[i] = upArray[i];
+				}
+//for (int i =0; i<ARRAY_SIZE; ++i) {
+//	std::cout<<downArray[i]<<", ";
+//}
 				if (level == 0) {
 					actualMove = *iter;
 				}
 			}
+			delete[] upArray;
 		}
 		return alpha;
 	}
@@ -219,24 +239,30 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 		b->calculatePossibleMoves(!color);
 		tempMoveSet = b->getPossibleMoves(!color);
 
-		// look for the best move already found and replace it with the first from the set
+
 		if (firstMove) {
-			if (level == maxLevel-2) {
+			if (level == maxLevel-2) {		// in next minMax call start exploring tree without first move path
 				firstMove = false;
 			}
-			tempMoveSet.erase(bestLeafPath[level]);
+			tempMoveSet.erase(bestLeafPath[level]);		// delete best move from the set
 
 			// copied part from above
-			b->movePiece(bestLeafPath[level], !color);
-			tmpLeafPath[level] = bestLeafPath[level];
-			tmp = minMax(level+1, alpha, beta);
+			b->movePiece(bestLeafPath[level], !color);	// do the best move
+			unsigned long long * upArray;		// array given to upper minMax call
+			upArray = new unsigned long long [ARRAY_SIZE];
+			memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);		// cleaning array with 0
+			tmp = minMax(level+1, alpha, beta, upArray);
 			b->undoMove();
-			tmpLeafPath[level] = 0;
 			b->clean();
 			b->calculatePossibleMoves(!color);
 			if (tmp < beta) {
 				beta = tmp;
+				downArray[level] = bestLeafPath[level];						// store best move so far (at current level)
+				for(int i = level+1; i<maxLevel; ++i) {			// copy good moves from higher levels
+					downArray[i] = upArray[i];
+				}
 			}
+			delete[] upArray;
 		}
 
 		iter = tempMoveSet.begin();
@@ -246,15 +272,21 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 			if (alpha >= beta)      // while (alpha < beta)
 				break;
 			b->movePiece(*iter, !color);
-			tmpLeafPath[level] = *iter;
-			tmp = minMax(level+1, alpha, beta);
+			unsigned long long * upArray;		// array given to upper minMax call
+			upArray = new unsigned long long [ARRAY_SIZE];
+			memset(upArray,0,sizeof(unsigned long long)*ARRAY_SIZE);		// cleaning array with 0
+			tmp = minMax(level+1, alpha, beta, upArray);
 			b->undoMove();
-			tmpLeafPath[level] = 0;
 			b->clean();
 			b->calculatePossibleMoves(!color);
 			if (tmp < beta) {
 				beta = tmp;
+				downArray[level] = *iter;						// store best move so far (at current level)
+				for(int i = level+1; i<maxLevel; ++i) {			// copy good moves from higher levels
+					downArray[i] = upArray[i];
+				}
 			}
+			delete[] upArray;
 		}
 		return beta;
 	}
@@ -262,7 +294,7 @@ int Heuristic::minMax(int level, int alpha, int beta) {
 }
 
 
-bool Heuristic::isWorking()
-{
-	return working;
+
+void Heuristic::timeoutOccured() {
+	timeoutMove = actualMove;
 }

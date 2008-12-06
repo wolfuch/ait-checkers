@@ -13,6 +13,8 @@
 #include "Heuristic.h"
 #include "Thread.h"
 
+class Heuristic;
+
 using namespace std;
 
 class AIPlayer: public Player {
@@ -20,6 +22,8 @@ public:
 	AIPlayer(int color, string name, MUTEX* mutex);		// Create user
 	~AIPlayer();							// Destroy user (Empty implementation yet)
 	void makeNextMove(board* b);			// Make the next best move
+	bool working;
+	void timeoutOccurred();
 	string getName();
 private:
 	Heuristic* m_heuristic;
