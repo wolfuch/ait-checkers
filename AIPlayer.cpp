@@ -37,6 +37,9 @@ void AIPlayer::makeNextMove(board* b){
 
 }
 
+string AIPlayer::getName() {
+	return m_name;
+}
 
 void AIPlayer::timeoutOccurred() {
 	m_heuristic->timeoutOccured();
