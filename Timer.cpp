@@ -9,8 +9,9 @@
 #include "Timer.h"
 #include <sys/time.h>
 
-Timer::Timer(MUTEX* mutex) {
+Timer::Timer(MUTEX* mutex, AIPlayer* aIPlayer) {
 	this->mutex = mutex;
+	this->aIPlayer = aIPlayer;
 }
 
 Timer::~Timer() {
@@ -24,11 +25,27 @@ void* Timer::Run(void* param) {
 
 	while(1) {
 		mutex->acquire();		// mutex down, wait for signal to count time
-		for(i=1; i<=17; ++i) {	// wait for 2:50
-			sleep(10*1000);
-			std::cout<<"time: "<<i*10<<std::endl;
+		for(i=1; i<=58; ++i) {	// wait for 2:50
+			if (!aIPlayer->working)
+				break;
+			sleep(1000);
+			//std::cout<<"time: "<<i<<std::endl;
 		}
-		sleep(8*1000);			// wait for 8 sec, 2 less for safety
-		std::cout<<"-------- 3min! ------------"<<std::endl;
+		if (aIPlayer->working) {	// if game is stopped during search tree
+			std::cout<<"-------- 1min! ------------"<<std::endl;
+			aIPlayer->timeoutOccurred();		// inform aiPlayer that time is finished
+			aIPlayer->working = false;			// stop searching tree
+		}
+
+
+// test measuring time
+//		for(i = 1; i<=3600; ++i) {
+//			sleep(1000);
+//			if (!aIPlayer->working) {
+//				std::cout<<std::endl<<" sekundy: "<<i<<std::endl;
+//				break;
+//			}
+//		}
+
 	}
 }
