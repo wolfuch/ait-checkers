@@ -11,6 +11,7 @@
 #include "Thread.h"
 #include "AIPlayer.h"
 
+
 class Timer: public THREAD {
 public:
 	Timer(MUTEX* mutex, AIPlayer* aIPlayer);
