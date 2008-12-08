@@ -25,7 +25,7 @@ void* Timer::Run(void* param) {
 
 	while(1) {
 		mutex->acquire();		// mutex down, wait for signal to count time
-		for(i=1; i<=58; ++i) {	// wait for 2:50
+		for(i=1; i<=58; ++i) {	// wait for 58 seconds
 			if (!aIPlayer->working)
 				break;
 			sleep(1000);

@@ -193,7 +193,9 @@ int Heuristic::minMax(int level, int alpha, int beta, unsigned long long downArr
 					downArray[i] = upArray[i];
 				}
 				if (level == 0) {
-					actualMove = bestLeafPath[level];
+					actualMoveMutex.acquire();
+						actualMove = bestLeafPath[level];
+					actualMoveMutex.release();
 				}
 			}
 			delete[] upArray;
@@ -224,7 +226,9 @@ int Heuristic::minMax(int level, int alpha, int beta, unsigned long long downArr
 //	std::cout<<downArray[i]<<", ";
 //}
 				if (level == 0) {
-					actualMove = *iter;
+					actualMoveMutex.acquire();
+						actualMove = *iter;
+					actualMoveMutex.release();
 				}
 			}
 			delete[] upArray;
@@ -296,5 +300,7 @@ int Heuristic::minMax(int level, int alpha, int beta, unsigned long long downArr
 
 
 void Heuristic::timeoutOccured() {
-	timeoutMove = actualMove;
+	actualMoveMutex.acquire();
+		timeoutMove = actualMove;
+	actualMoveMutex.release();
 }

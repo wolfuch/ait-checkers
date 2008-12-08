@@ -11,8 +11,9 @@
 #define HEURISTIC_H_
 #include "board.hpp"
 #include "AIPlayer.h"
-#include <set>
-#include <iostream>
+#include "Thread.h"
+
+
 
 class AIPlayer;
 
@@ -48,6 +49,7 @@ private:
 	int iteration;
 	int counter;
 	AIPlayer *aiPlayer;
+	MUTEX actualMoveMutex;
 };
 
 #endif /* HEURISTIC_H_ */
