@@ -40,6 +40,8 @@ void HumanPlayer::makeNextMove(board* b){
 		cin >> moveStr;		// Combine moveFrom and moveTo
 		cout << "Move = " << moveStr << endl;
 
+		move = 0;
+
 		/* Check if the sequence is valid */
 		for(unsigned int i = 0; i<strlen(moveStr.c_str());i++){
 			if(((int)moveStr[i])-48<((int)'1')-48 || ((int)moveStr[i])-48>((int)'9')-48 ||
@@ -54,7 +56,8 @@ void HumanPlayer::makeNextMove(board* b){
 			moved = b->movePiece(move, m_color);	// TRY
 		} else {
 			cout << "Invalid move sequence!" << endl;
-			move = 0;
+
+			moveStr.clear();
 		}
 	}
 
