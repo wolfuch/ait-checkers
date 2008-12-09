@@ -26,8 +26,8 @@ int main(int argc, char **argv) {
 	//std::cout<<(1+!(color)*7)<<std::endl;
 
 	/* Create players */
-	Player* whitePlayer = new HumanPlayer(1, "Marc");
-	Player* blackPlayer = new AIPlayer(0, "Abraham", mutex);
+	Player* whitePlayer = new HumanPlayer(0, "Marc");
+	Player* blackPlayer = new AIPlayer(1, "Abraham", mutex);
 	int terminal = 0;
 	Timer *timer = new Timer(mutex,(AIPlayer*) blackPlayer);
 
@@ -38,9 +38,11 @@ int main(int argc, char **argv) {
 		brd->printBoardAlternative();
 		whitePlayer->makeNextMove(brd);
 
+
 		// Black player
 		brd->printBoardAlternative();
 		blackPlayer->makeNextMove(brd);
+
 		terminal = brd->terminal();
 	} while (terminal==0);
 
