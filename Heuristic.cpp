@@ -55,7 +55,7 @@ unsigned int Heuristic::bestMove(board* b, int color) {
 		for (int i=0; i<ARRAY_SIZE; ++i) {								// copy best move found in last minMax
 			bestLeafPath[i] = upArray[i];
 		}
-		std::cout<<iteration<<std::endl;
+		std::cout<<"-> Level " << maxLevel<< " at " << iteration<< " iterations" << std::endl;
 		sum += iteration;
 		firstMove = true;
 	}
