@@ -88,7 +88,7 @@ int Heuristic::evaluation() {
 		{
 			y = *setIterator / 10;
 			x = *setIterator % 10;
-			sumWhite += KING_VALUE + y*y;
+			sumWhite += KING_VALUE;
 			if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
 				if (x == y)	{	// king in one of corners (11, 88)
 					sumWhite -= CORNER_PENALTY;
@@ -113,7 +113,7 @@ int Heuristic::evaluation() {
 		{
 			y = 9 - (*setIterator / 10);
 			x = *setIterator % 10;
-			sumBlack += KING_VALUE + y*y;
+			sumBlack += KING_VALUE;
 			if (y == 1 || y == 8 || x == 1 || x == 8) {		// king in the edge
 				if (x == y)	{	// king in one of corners (11, 88)
 					sumBlack -= CORNER_PENALTY;
