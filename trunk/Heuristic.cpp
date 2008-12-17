@@ -218,13 +218,10 @@ int Heuristic::minMax(int level, int alpha, int beta, unsigned long long downArr
 			if (tmp > alpha) {
 				alpha = tmp;
 				downArray[level] = *iter;						// store best move so far (at current level)
-//std::cout<<std::endl<<"level: "<<level<<" downArray: ";
 				for(int i = level+1; i<maxLevel; ++i) {			// copy good moves from higher levels
 					downArray[i] = upArray[i];
 				}
-//for (int i =0; i<ARRAY_SIZE; ++i) {
-//	std::cout<<downArray[i]<<", ";
-//}
+
 				if (level == 0) {
 					actualMoveMutex.acquire();
 						actualMove = *iter;
